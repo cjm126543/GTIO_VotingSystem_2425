@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App de Votación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .opcion {
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background: #0056b3;
+        }
+        img {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+        .contador {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vota por tu participante favorito de OT</h1>
+    
+    <div id="votacion"></div>
+    <div id="resultados" style="display: none; margin-top: 20px;"></div>
+
+    <script>
+        const participantes = [
+            { id: "opcion1", nombre: "Naiara", img: "https://www.formulatv.com/images/fgaleria/85600/85667_cv03.jpg" },
+            { id: "opcion2", nombre: "Lucasa", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxryLaY3O24KCCrYp8xiLKTxju6j9miEh8Vg&s" }
+        ];
+
+        function haVotado() {
+            return localStorage.getItem("votoRealizado") !== null;
+        }
+
+        function obtenerVotos() {
+            return JSON.parse(localStorage.getItem("votos")) || { opcion1: 0, opcion2: 0 };
+        }
+
+        function guardarVotos(votos) {
+            localStorage.setItem("votos", JSON.stringify(votos));
+        }
+
+        function votar(id) {
+            if (!haVotado()) {
+                localStorage.setItem("votoRealizado", id);
+                let votos = obtenerVotos();
+                votos[id]++;
+                guardarVotos(votos);
+                alert("¡Voto registrado con éxito!");
+                deshabilitarVotacion();
+                mostrarResultados();
+            } else {
+                alert("Ya has votado. Solo se permite un voto por persona.");
+            }
+        }
+
+        function deshabilitarVotacion() {
+            document.querySelectorAll("button").forEach(button => button.disabled = true);
+        }
+
+        function mostrarResultados() {
+            let votos = obtenerVotos();
+            let resultadosDiv = document.getElementById("resultados");
+            resultadosDiv.innerHTML = `<h2>Resultados:</h2>
+                <p>${participantes[0].nombre}: ${votos.opcion1} votos</p>
+                <p>${participantes[1].nombre}: ${votos.opcion2} votos</p>`;
+            resultadosDiv.style.display = "block";
+        }
+
+        function crearOpciones() {
+            const contenedor = document.getElementById("votacion");
+            participantes.forEach(participante => {
+                const div = document.createElement("div");
+                div.classList.add("opcion");
+
+                const img = document.createElement("img");
+                img.src = participante.img;
+                img.alt = participante.nombre;
+
+                const nombre = document.createElement("p");
+                nombre.textContent = participante.nombre;
+
+                const boton = document.createElement("button");
+                boton.textContent = "Votar";
+                boton.onclick = () => votar(participante.id);
+
+                div.appendChild(img);
+                div.appendChild(nombre);
+                div.appendChild(boton);
+                contenedor.appendChild(div);
+            });
+
+            if (haVotado()) {
+                deshabilitarVotacion();
+                mostrarResultados();
+            }
+        }
+
+        crearOpciones();
+    </script>
+</body>
+</html>
