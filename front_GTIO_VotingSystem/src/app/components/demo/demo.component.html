@@ -1,0 +1,17 @@
+<h1>Vota por tu participante favorito de OT</h1>
+<div class="option-pack">
+  <div *ngFor="let participante of participantes" class="opcion">
+    <img [src]="participante.img" [alt]="participante.nombre" />
+    <p>{{ participante.nombre }}</p>
+    <button (click)="votar(participante.id)" [disabled]="votoRealizado">
+      Votar
+    </button>
+  </div>
+</div>
+
+<div *ngIf="votoRealizado" class="resultados">
+  <h2>Resultados:</h2>
+  <p *ngFor="let participante of participantes">
+    {{ participante.nombre }}: {{ votos[participante.id] }} votos
+  </p>
+</div>
