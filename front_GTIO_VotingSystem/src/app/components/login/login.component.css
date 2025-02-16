@@ -1,0 +1,36 @@
+.login-container {
+  background: linear-gradient(135deg, #ffa500, #ff1493, #800080);
+  padding: 30px;
+  border-radius: 15px;
+  color: white;
+  width: 300px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+button {
+  padding: 10px;
+  background: white;
+  color: #ff1493;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 6rem;
+}
+
+button:hover {
+  background: #ff4500;
+  color: white;
+}
