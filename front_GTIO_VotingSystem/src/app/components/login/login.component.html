@@ -1,10 +1,29 @@
 <div class="login-container">
   <h2>Iniciar Sesión en OT</h2>
-  <form (submit)="login($event)">
-    <input type="text" placeholder="Nombre de usuario" required />
-    <input type="password" placeholder="Contraseña" required />
-    <button type="submit">Iniciar Sesión</button>
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <input
+      type="text"
+      formControlName="nombreUsuario"
+      placeholder="Nombre de usuario"
+      pattern="[a-zA-Z0-9]+"
+      required
+    />
+
+    <input
+      type="password"
+      formControlName="password"
+      placeholder="Contraseña"
+      pattern="[a-zA-Z0-9]+"
+      required
+    />
+    <p *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </p>
+
+    <button type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
   </form>
+
   <p class="register-text">
     ¿No tienes cuenta?
     <a (click)="goToRegister()">Registrarse</a>
