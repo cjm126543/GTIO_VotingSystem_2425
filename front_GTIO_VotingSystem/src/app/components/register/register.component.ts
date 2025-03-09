@@ -4,6 +4,9 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -24,24 +27,31 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private service: RegisterService
   ) {
-    this.registerForm = this.fb.group({
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-          ),
+    this.registerForm = this.fb.group(
+      {
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+            ),
+          ],
         ],
-      ],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZñÑ]+$/)]],
-      apellido: [
-        '',
-        [Validators.required, Validators.pattern(/^[a-zA-ZñÑ]+$/)],
-      ],
-      nombreUsuario: ['', [Validators.required]],
-    });
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        passwordRepeat: ['', [Validators.required]],
+        nombre: [
+          '',
+          [Validators.required, Validators.pattern(/^[a-zA-ZñÑ]+$/)],
+        ],
+        apellido: [
+          '',
+          [Validators.required, Validators.pattern(/^[a-zA-ZñÑ]+$/)],
+        ],
+        nombreUsuario: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator() }
+    );
   }
 
   register() {
@@ -94,5 +104,23 @@ export class RegisterComponent {
   get password() {
     return this.registerForm.get('password');
   }
+  get passwordRepeat() {
+    return this.registerForm.get('passwordRepeat');
+  }
   //#endregion
+
+  passwordMatchValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const password = control.get('password')?.value;
+      const passwordRepeat = control.get('passwordRepeat')?.value;
+
+      // Si los campos coinciden, no hay error
+      if (password === passwordRepeat) {
+        return null;
+      }
+
+      // Si no coinciden, devuelve un error
+      return { passwordMismatch: true };
+    };
+  }
 }

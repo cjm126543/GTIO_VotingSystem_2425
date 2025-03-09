@@ -43,6 +43,15 @@
     <p *ngIf="password?.invalid && password?.touched" class="error">
       * La contraseña debe tener al menos 6 caracteres
     </p>
+    <input
+      type="passwordRepeat"
+      formControlName="passwordRepeat"
+      placeholder="Repetir contraseña"
+      required
+    />
+    <p *ngIf="passwordRepeat?.invalid && passwordRepeat?.touched" class="error">
+      * Las contraseñas no coinciden
+    </p>
 
     <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
   </form>
