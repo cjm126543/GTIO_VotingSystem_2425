@@ -16,7 +16,7 @@ export class DemoComponent {
     },
     {
       id: 'opcion2',
-      nombre: 'Lucasa',
+      nombre: 'Lucas',
       img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxryLaY3O24KCCrYp8xiLKTxju6j9miEh8Vg&s',
     },
   ];

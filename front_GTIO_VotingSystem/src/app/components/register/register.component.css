@@ -34,18 +34,3 @@ button:hover {
   background: #ff4500;
   color: white;
 }
-.register-text {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.register-text a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.register-text a:hover {
-  text-decoration: underline;
-}

@@ -14,4 +14,7 @@ export class LoginComponent {
     //alert('Inicio de sesión exitoso');
     this.router.navigate(['/demo']);
   }
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
 }

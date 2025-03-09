@@ -1,0 +1,49 @@
+<div class="login-container">
+  <h2>Registro</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <input type="text" formControlName="nombre" placeholder="Nombre" required />
+    <p *ngIf="nombre?.invalid && nombre?.touched" class="error">
+      * Ingrese un nombre válido
+    </p>
+    <input
+      type="text"
+      formControlName="apellido"
+      placeholder="Apellido"
+      required
+    />
+    <p *ngIf="apellido?.invalid && apellido?.touched" class="error">
+      * Ingrese un apellido válido
+    </p>
+    <input
+      type="text"
+      formControlName="nombreUsuario"
+      placeholder="Nombre de usuario"
+      required
+    />
+    <p *ngIf="nombreUsuario?.invalid && nombreUsuario?.touched" class="error">
+      * Ingrese un nombre de usuario válido
+    </p>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Correo electrónico"
+      required
+    />
+    <p *ngIf="email?.invalid && email?.touched" class="error">
+      * Ingrese un correo válido (ejemplo&#64;dominio.com)
+    </p>
+
+    <input
+      type="password"
+      formControlName="password"
+      placeholder="Contraseña (mín. 6 caracteres)"
+      required
+    />
+    <p *ngIf="password?.invalid && password?.touched" class="error">
+      * La contraseña debe tener al menos 6 caracteres
+    </p>
+
+    <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+  </form>
+</div>
