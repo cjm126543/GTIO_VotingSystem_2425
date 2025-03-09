@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { LoginDto } from '../../dtos/loginDto';
 import { LoginService } from '../../services/loginService';
+import { AuthService } from '../../services/authService';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
@@ -23,7 +24,8 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private service: LoginService // Inyecta el servicio
+    private service: LoginService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       nombreUsuario: [''],
@@ -49,6 +51,8 @@ export class LoginComponent {
           console.error('Error:', err);
         },
       });*/
+      const fakeToken = 'tu-token-jwt';
+      this.authService.login(fakeToken);
       this.router.navigate(['/demo']);
     } else {
       alert('Por favor, ingrese datos válidos');

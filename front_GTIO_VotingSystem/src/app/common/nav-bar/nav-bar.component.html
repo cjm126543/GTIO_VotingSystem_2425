@@ -3,10 +3,10 @@
     <img src="../../../../assets/logo.png" alt="Logo" class="logo-img" />
     <div class="navbar-brand">Operación Triunfo</div>
   </div>
-  <button *ngIf="isLoggedIn === false" class="login-btn" (click)="onLogin()">
+  <button *ngIf="!isLoggedIn" class="login-btn" (click)="onLogin()">
     Login
   </button>
-  <button *ngIf="isLoggedIn === true" class="login-btn" (click)="logout()">
+  <button *ngIf="isLoggedIn" class="login-btn" (click)="logout()">
     Cerrar Sesión
   </button>
 </nav>
