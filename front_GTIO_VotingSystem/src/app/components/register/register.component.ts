@@ -7,6 +7,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RegisterDto } from '../../dtos/registerDto';
+import { RegisterService } from '../../services/registerService';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +19,11 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private service: RegisterService
+  ) {
     this.registerForm = this.fb.group({
       email: [
         '',
@@ -37,14 +43,29 @@ export class RegisterComponent {
       nombreUsuario: ['', [Validators.required]],
     });
   }
-  // register(event: Event) {
-  //   event.preventDefault();
-  //   //alert('Inicio de sesión exitoso');
-  //   this.router.navigate(['/demo']);
-  // }
 
   register() {
     if (this.registerForm.valid) {
+      const user: RegisterDto = new RegisterDto(
+        this.registerForm.value.nombre,
+        this.registerForm.value.apellido,
+        this.registerForm.value.nombreUsuario,
+        this.registerForm.value.email,
+        this.registerForm.value.password
+      );
+
+      /*this.service.register(user).subscribe({
+        next: (response) => {
+          alert('Registro exitoso');
+          console.log('Respuesta del servidor:', response);
+          this.router.navigate(['/demo']);
+        },
+        error: (err) => {
+          alert('Error en el registro');
+          console.error('Error:', err);
+        },
+      });*/
+
       alert('Registro exitoso');
       console.log(this.registerForm.value);
       this.router.navigate(['/demo']);
