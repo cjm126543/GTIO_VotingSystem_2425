@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/authService';
 
 @Component({
   selector: 'app-demo',
@@ -24,17 +25,30 @@ export class DemoComponent {
   votos: any = { opcion1: 0, opcion2: 0 };
   votoRealizado: string | null = null;
 
+  constructor(private authService: AuthService) {}
+
   ngOnInit() {
-    //this.votoRealizado = localStorage.getItem('votoRealizado');
     this.votos = JSON.parse(
       localStorage.getItem('votos') || '{"opcion1":0,"opcion2":0}'
     );
+    this.votoRealizado = localStorage.getItem('votoRealizado');
   }
 
   votar(id: string) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Debes iniciar sesión para votar.');
+      return;
+    }
+
     this.votoRealizado = id;
     localStorage.setItem('votoRealizado', id);
     this.votos[id]++;
     localStorage.setItem('votos', JSON.stringify(this.votos));
+  }
+  totalVotos(): number {
+    return this.votos['opcion1'] + this.votos['opcion2'];
+  }
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 }
