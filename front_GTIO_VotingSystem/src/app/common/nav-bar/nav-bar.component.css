@@ -33,3 +33,13 @@
   background: #ff4500;
   color: white;
 }
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.logo-img {
+  height: 4rem;
+  width: 5rem;
+}
