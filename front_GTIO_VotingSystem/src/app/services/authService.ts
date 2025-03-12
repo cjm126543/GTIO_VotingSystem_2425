@@ -8,12 +8,17 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  private votoRealizadoSubject = new BehaviorSubject<boolean>(this.hasVoted());
+  votoRealizado$ = this.votoRealizadoSubject.asObservable();
 
   constructor(private router: Router) {}
 
   // Verifica si hay un token en el localStorage
   private hasToken(): boolean {
     return !!localStorage.getItem('authToken');
+  }
+  private hasVoted(): boolean {
+    return !!localStorage.getItem('votoRealizado');
   }
 
   login(token: string): void {
@@ -25,7 +30,13 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('authToken');
     this.isLoggedInSubject.next(false);
+    localStorage.removeItem('votoRealizado');
+    this.votoRealizadoSubject.next(false);
     this.router.navigate(['/login']);
+  }
+  votar(id: any): void {
+    localStorage.setItem('votoRealizado', id);
+    this.votoRealizadoSubject.next(true);
   }
 
   getToken(): string | null {
@@ -33,5 +44,14 @@ export class AuthService {
   }
   isLoggedIn(): boolean {
     return this.isLoggedInSubject.value;
+  }
+  isVoted(): boolean {
+    return this.votoRealizadoSubject.value;
+  }
+  setVotoRealizado(realizado: boolean) {
+    if (realizado) {
+      localStorage.setItem('votoRealizado', '');
+      this.votoRealizadoSubject.next(true);
+    }
   }
 }

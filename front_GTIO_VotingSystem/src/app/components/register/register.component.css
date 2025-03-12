@@ -30,7 +30,7 @@ button {
   margin-left: 6rem;
 }
 
-button:hover {
+button:hover:enabled {
   background: #ff4500;
   color: white;
 }

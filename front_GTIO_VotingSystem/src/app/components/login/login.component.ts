@@ -10,6 +10,7 @@ import {
 import { LoginDto } from '../../dtos/loginDto';
 import { LoginService } from '../../services/loginService';
 import { AuthService } from '../../services/authService';
+import { AuthMockService } from '../../mocks/authServiceMock';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
@@ -24,7 +25,7 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private service: LoginService,
+    private service: AuthMockService,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
@@ -34,29 +35,22 @@ export class LoginComponent {
   }
 
   login() {
-    if (this.loginForm.valid) {
-      const user: LoginDto = new LoginDto(
-        this.loginForm.value.nombreUsuario,
-        this.loginForm.value.password
-      );
+    const user: LoginDto = new LoginDto(
+      this.loginForm.value.nombreUsuario,
+      this.loginForm.value.password
+    );
 
-      /*this.service.login(user).subscribe({
-        next: (response) => {
-          alert('Inicio de sesión exitoso');
-          console.log('Respuesta del servidor:', response);
-          this.router.navigate(['/demo']);
-        },
-        error: (err) => {
-          this.errorMessage = 'Usuario o contraseña incorrectos';
-          console.error('Error:', err);
-        },
-      });*/
-      const fakeToken = 'tu-token-jwt';
-      this.authService.login(fakeToken);
-      this.router.navigate(['/demo']);
-    } else {
-      alert('Por favor, ingrese datos válidos');
-    }
+    this.service.login(user).subscribe({
+      next: (response) => {
+        this.authService.login(response.token);
+        this.authService.setVotoRealizado(response.votoRealizado);
+        this.router.navigate(['/demo']);
+      },
+      error: (err) => {
+        alert('Usuario o contraseñas incorrectos');
+        console.error('Error:', err);
+      },
+    });
   }
   goToRegister() {
     this.router.navigate(['/register']);

@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RegisterDto } from '../../dtos/registerDto';
 import { RegisterService } from '../../services/registerService';
+import { AuthMockService } from '../../mocks/authServiceMock';
+import { AuthService } from '../../services/authService';
 
 @Component({
   selector: 'app-register',
@@ -25,7 +27,8 @@ export class RegisterComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private service: RegisterService
+    private service: AuthMockService,
+    private authService: AuthService
   ) {
     this.registerForm = this.fb.group(
       {
@@ -55,33 +58,24 @@ export class RegisterComponent {
   }
 
   register() {
-    if (this.registerForm.valid) {
-      const user: RegisterDto = new RegisterDto(
-        this.registerForm.value.nombre,
-        this.registerForm.value.apellido,
-        this.registerForm.value.nombreUsuario,
-        this.registerForm.value.email,
-        this.registerForm.value.password
-      );
+    const user: RegisterDto = new RegisterDto(
+      this.registerForm.value.nombre,
+      this.registerForm.value.apellido,
+      this.registerForm.value.nombreUsuario,
+      this.registerForm.value.email,
+      this.registerForm.value.password
+    );
 
-      /*this.service.register(user).subscribe({
-        next: (response) => {
-          alert('Registro exitoso');
-          console.log('Respuesta del servidor:', response);
-          this.router.navigate(['/demo']);
-        },
-        error: (err) => {
-          alert('Error en el registro');
-          console.error('Error:', err);
-        },
-      });*/
-
-      alert('Registro exitoso');
-      console.log(this.registerForm.value);
-      this.router.navigate(['/demo']);
-    } else {
-      alert('Por favor, ingrese datos válidos');
-    }
+    this.service.register(user).subscribe({
+      next: (response) => {
+        this.authService.login(response.token);
+        this.router.navigate(['/demo']);
+      },
+      error: (err) => {
+        alert('Error en el registro');
+        console.error('Error:', err);
+      },
+    });
   }
 
   //#region  Form methods
