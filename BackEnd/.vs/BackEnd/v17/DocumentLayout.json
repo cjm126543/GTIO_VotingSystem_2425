@@ -1,0 +1,172 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\models\\msrolesusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\msrolesusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\models\\dtusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\dtusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\models\\dtvotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\dtvotos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\models\\dtartistas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\dtartistas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\ender\\desktop\\testbackend\\backend\\backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Controllers\\UserController.cs",
+              "RelativeToolTip": "BackEnd\\Controllers\\UserController.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAswEMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-09T13:07:14.565Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\AppDbContext.cs",
+              "RelativeToolTip": "BackEnd\\Models\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T17:41:18.667Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "dtVotos.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtVotos.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\dtVotos.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtVotos.cs",
+              "RelativeToolTip": "BackEnd\\Models\\dtVotos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T20:21:10.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "msRolesUsuario.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\msRolesUsuario.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\msRolesUsuario.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\msRolesUsuario.cs",
+              "RelativeToolTip": "BackEnd\\Models\\msRolesUsuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T20:20:27.83Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Program.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Program.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Program.cs",
+              "RelativeToolTip": "BackEnd\\Program.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAAQAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T17:57:04.255Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\appsettings.json",
+              "RelativeDocumentMoniker": "BackEnd\\appsettings.json",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\appsettings.json",
+              "RelativeToolTip": "BackEnd\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-10T17:57:12.32Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "dtUsuarios.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtUsuarios.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\dtUsuarios.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtUsuarios.cs",
+              "RelativeToolTip": "BackEnd\\Models\\dtUsuarios.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T18:03:20.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Dockerfile",
+              "RelativeDocumentMoniker": "BackEnd\\Dockerfile",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Dockerfile",
+              "RelativeToolTip": "BackEnd\\Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-10T17:48:04.973Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "dtArtistas.cs",
+              "DocumentMoniker": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtArtistas.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\dtArtistas.cs",
+              "ToolTip": "C:\\Users\\Ender\\Desktop\\testBackEnd\\BackEnd\\BackEnd\\Models\\dtArtistas.cs",
+              "RelativeToolTip": "BackEnd\\Models\\dtArtistas.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-10T18:29:11.734Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
