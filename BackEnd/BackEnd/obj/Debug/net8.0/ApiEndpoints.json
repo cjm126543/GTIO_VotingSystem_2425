@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "ArtistController",
+    "Method": "ObtenerTodosLosArtistas",
+    "RelativePath": "api/artistas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "UserController",
     "Method": "Login",
     "RelativePath": "api/users/login",
@@ -32,24 +42,71 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BackEnd.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
+    "ContainingType": "VoteController",
+    "Method": "ObtenerTodosLosVotos",
+    "RelativePath": "api/votos",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VoteController",
+    "Method": "EliminarVoto",
+    "RelativePath": "api/votos/eliminar/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[BackEnd.WeatherForecast, BackEnd, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VoteController",
+    "Method": "RegistrarVoto",
+    "RelativePath": "api/votos/registrarVoto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "votoRequest",
+        "Type": "VoteController\u002BVotoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VoteController",
+    "Method": "ObtenerResultadosVotaciones",
+    "RelativePath": "api/votos/resultados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VoteController",
+    "Method": "ObtenerVotosPorUsuario",
+    "RelativePath": "api/votos/usuario/{idUsuario}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

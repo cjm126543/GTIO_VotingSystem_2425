@@ -114,7 +114,7 @@ public class UserController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier, user.Correo),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, user.IDRolUsuarioNavigation?.DescripcionRol ?? "User")
+            new Claim(ClaimTypes.Role, user.IDRolUsuarioNavigation?.DescripcionRol ?? "Sin rol")
         };
 
         var token = new JwtSecurityToken(
@@ -128,6 +128,8 @@ public class UserController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
+
+
 
 
 public class LoginRequest
