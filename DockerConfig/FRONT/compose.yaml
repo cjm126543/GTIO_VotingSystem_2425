@@ -9,10 +9,8 @@ services:
         ipv4_address: 172.20.0.2
     ports:
       - "4200:4200"
-    volumes:
-      - ../../front_GTIO_VotingSystem:/app
     working_dir: /app
-    command: ng serve --host 0.0.0.0
+    command: ["npx", "ng", "serve", "--host", "0.0.0.0"]
 
 networks:
   frontend_net:

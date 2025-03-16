@@ -2,12 +2,11 @@ FROM node:22.14.0
 
 WORKDIR /app
 
-COPY . .
-
-RUN npm install -g @angular/cli@19.2.1 typescript@5.4.5
-
+COPY package.json package-lock.json ./
 RUN npm install
+
+COPY . .
 
 EXPOSE 4200
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
