@@ -16,20 +16,20 @@ namespace BackEnd.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Relación Usuario - Rol
+            
             modelBuilder.Entity<dtUsuarios>()
                 .HasOne(u => u.IDRolUsuarioNavigation)
                 .WithMany(r => r.Usuarios)
                 .HasForeignKey(u => u.IDRolUsuario)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Relación Votos - Usuario
+           
             modelBuilder.Entity<dtVotos>()
                 .HasOne(v => v.IDUsuarioNavigation)
                 .WithMany()
                 .HasForeignKey(v => v.IDUsuario);
 
-            // Relación Votos - Artista
+       
             modelBuilder.Entity<dtVotos>()
                 .HasOne(v => v.IDArtistaNavigation)
                 .WithMany()

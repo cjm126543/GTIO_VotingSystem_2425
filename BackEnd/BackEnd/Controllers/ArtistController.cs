@@ -14,8 +14,7 @@ public class ArtistController : ControllerBase
         _context = context;
     }
 
-    // ✅ GET: api/artistas
-    [AllowAnonymous] // Si es para poblar el frontend sin requerir autorización
+    [AllowAnonymous] 
     [HttpGet]
     public async Task<IActionResult> ObtenerTodosLosArtistas()
     {

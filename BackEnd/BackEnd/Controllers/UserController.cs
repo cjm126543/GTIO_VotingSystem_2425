@@ -37,7 +37,7 @@ public class UserController : ControllerBase
             Nombre = userDto.Nombre,
             Apellidos = userDto.Apellidos,
             Correo = userDto.Correo,
-            Contrasenia = BCrypt.Net.BCrypt.HashPassword(userDto.Contrasenia), // Hash the password
+            Contrasenia = BCrypt.Net.BCrypt.HashPassword(userDto.Contrasenia), 
             IDRolUsuario = 1,
             Eliminado = false
         };
@@ -48,8 +48,6 @@ public class UserController : ControllerBase
         return Ok(new { message = "User registered successfully!" });
     }
 
-
-   
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
@@ -66,45 +64,6 @@ public class UserController : ControllerBase
         return Ok(new { token = tokenUser, userID = user.IDUsuario, puedeVotar = true, message = "Login success" });
     }
 
-    /*    
-        [Authorize]
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetUserProfile()
-        {
-            var userEmail = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userEmail == null) return Unauthorized();
-
-            var user = await _context.dtUsuarios.Include(u => u.IDRolUsuarioNavigation)
-                        .FirstOrDefaultAsync(u => u.Correo == userEmail);
-            if (user == null) return NotFound();
-
-            return Ok(new
-            {
-                user.Nombre,
-                user.Apellidos,
-                user.Correo,
-                Role = user.IDRolUsuarioNavigation?.DescripcionRol
-            });
-        }*/
-
-  
-/*    [Authorize(Roles = "Admin")]
-    [HttpPut("update-role/{id}")]
-    public async Task<IActionResult> UpdateUserRole(int id, [FromBody] int newRoleId)
-    {
-        var user = await _context.dtUsuarios.FindAsync(id);
-        if (user == null) return NotFound("User not found.");
-
-        var roleExists = await _context.msRolesUsuario.AnyAsync(r => r.IDRolUsuario == newRoleId);
-        if (!roleExists) return BadRequest("Invalid role ID.");
-
-        user.IDRolUsuario = newRoleId;
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "User role updated successfully." });
-    }
-*/
-    // JWT TOKEN GENERATION
     private string GenerateJwtToken(dtUsuarios user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -128,9 +87,6 @@ public class UserController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
-
-
-
 
 public class LoginRequest
 {

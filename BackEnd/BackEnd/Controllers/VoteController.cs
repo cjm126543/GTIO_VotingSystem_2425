@@ -15,7 +15,6 @@ public class VoteController : ControllerBase
         _context = context;
     }
 
-    // POST: api/votos/registrar
     [Authorize]
     [HttpPost("registrarVoto")]
     public async Task<IActionResult> RegistrarVoto([FromBody] VotoRequest votoRequest)
@@ -37,7 +36,6 @@ public class VoteController : ControllerBase
         if (artista == null)
             return NotFound("Artista no encontrado");
 
-        // ✅ Limitar a 1 voto por usuario por día (independientemente del artista)
         var hoy = DateTime.UtcNow.Date;
         var votoHoy = await _context.dtVotos
             .AnyAsync(v => v.IDUsuario == usuario.IDUsuario &&
@@ -61,7 +59,6 @@ public class VoteController : ControllerBase
         return Ok(new { message = "Voto registrado con éxito" });
     }
 
-    // GET: api/votos
     [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> ObtenerTodosLosVotos()
@@ -82,7 +79,6 @@ public class VoteController : ControllerBase
         return Ok(votos);
     }
 
-    // GET: api/votos/usuario/{idUsuario}
     [Authorize]
     [HttpGet("usuario/{idUsuario}")]
     public async Task<IActionResult> ObtenerVotosPorUsuario(int idUsuario)
@@ -101,7 +97,6 @@ public class VoteController : ControllerBase
         return Ok(votos);
     }
 
-    // DELETE: api/votos/eliminar/{id}
     [Authorize(Roles = "Administrador")]
     [HttpDelete("eliminar/{id}")]
     public async Task<IActionResult> EliminarVoto(int id)
@@ -118,18 +113,23 @@ public class VoteController : ControllerBase
         return Ok(new { message = "Voto eliminado correctamente" });
     }
 
-    // ✅ GET: api/votos/resultados
     [AllowAnonymous]
     [HttpGet("resultados")]
     public async Task<IActionResult> ObtenerResultadosVotaciones()
     {
         var resultados = await _context.dtVotos
             .Where(v => !v.Eliminado)
-            .GroupBy(v => v.IDArtista)
+            .Include(v => v.IDArtistaNavigation) 
+            .GroupBy(v => new
+            {
+                v.IDArtista,
+                v.IDArtistaNavigation.Nombre,
+                v.IDArtistaNavigation.Apellidos
+            })
             .Select(group => new
             {
-                IDArtista = group.Key,
-                NombreArtista = group.First().IDArtistaNavigation.Nombre + " " + group.First().IDArtistaNavigation.Apellidos,
+                IDArtista = group.Key.IDArtista,
+                NombreArtista = group.Key.Nombre + " " + group.Key.Apellidos,
                 TotalVotos = group.Count()
             })
             .OrderByDescending(r => r.TotalVotos)
