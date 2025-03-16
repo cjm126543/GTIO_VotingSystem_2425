@@ -19,7 +19,7 @@ public class ArtistController : ControllerBase
     public async Task<IActionResult> ObtenerTodosLosArtistas()
     {
         var artistas = await _context.dtArtistas
-            .Where(a => !a.Eliminado)
+            .FromSqlRaw("SELECT * FROM dtArtistas WHERE Eliminado = 0")
             .Select(a => new
             {
                 a.IDArtista,
@@ -31,6 +31,18 @@ public class ArtistController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(artistas);
+        var artistasSinDuplicados = artistas
+            .GroupBy(a => new
+            {
+                a.Nombre,
+                a.Apellidos,
+                a.Sexo,
+                a.LinkFoto,
+                a.Biografia
+            })
+            .Select(g => g.OrderBy(a => a.IDArtista).First()) 
+            .ToList();
+
+        return Ok(artistasSinDuplicados);
     }
 }

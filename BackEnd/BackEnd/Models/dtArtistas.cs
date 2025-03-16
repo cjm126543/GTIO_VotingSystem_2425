@@ -19,6 +19,5 @@ namespace BackEnd.Models
         public required string Biografia { get; set; }
 
         public bool Eliminado { get; set; } = false;
-
     }
 }

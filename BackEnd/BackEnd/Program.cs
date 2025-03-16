@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Register AppDbContext with your connection string (adjust as needed)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .EnableSensitiveDataLogging() 
+           .LogTo(Console.WriteLine, LogLevel.Information)
 );
 
 
