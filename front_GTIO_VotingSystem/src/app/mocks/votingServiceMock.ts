@@ -10,7 +10,7 @@ export class VotingMockService {
   private votos: any = { opcion1: 0, opcion2: 0 };
 
   votar(voto: VoteDto) {
-    this.votos[voto.nombreParticipante]++;
+    this.votos[voto.idArtista]++;
     return of({ votos: this.votos }).pipe(delay(500));
   }
 

@@ -1,3 +1,4 @@
-export class LoginDto {
-  constructor(public nombreUsuario: string, public password: string) {}
+export interface LoginDto {
+  email: string;
+  password: string;
 }

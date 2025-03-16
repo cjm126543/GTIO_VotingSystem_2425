@@ -1,3 +1,5 @@
-export class ParticipanteDto {
-  constructor(public id: number, public nombre: string, public img: string) {}
+export interface ParticipanteDto {
+  id: number;
+  nombre: string;
+  img: string;
 }
