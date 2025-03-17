@@ -1,8 +1,29 @@
-﻿namespace Test
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+namespace Test
 {
     [TestClass] 
     public class SampleTests
     {
+        private string _connectionString;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())  // Necesario para encontrar appsettings.test.json
+                .AddJsonFile("appsettings.test.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            _connectionString = config.GetConnectionString("DefaultConnection");
+        }
+
+        [TestMethod]
+        public void VerificarConexionBaseDeDatos()
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(_connectionString), "La cadena de conexión no debe estar vacía.");
+        }
         [TestMethod] 
         public void Sum_TwoPlusTwo_ShouldReturnFour()
         {
