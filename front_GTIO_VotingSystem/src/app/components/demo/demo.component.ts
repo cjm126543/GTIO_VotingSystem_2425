@@ -4,6 +4,9 @@ import { AuthService } from '../../services/authService';
 import { AuthMockService } from '../../mocks/authServiceMock';
 import { VotingMockService } from '../../mocks/votingServiceMock';
 import { VoteDto } from '../../dtos/voteDto';
+import { environment } from '../../../environments/environment';
+import { VotingService } from '../../services/votingService';
+import { NotExpr } from '@angular/compiler';
 
 @Component({
   selector: 'app-demo',
@@ -13,15 +16,23 @@ import { VoteDto } from '../../dtos/voteDto';
 })
 export class DemoComponent {
   participantes = [
+    // {
+    //   id: 'opcion1',
+    //   nombre: 'Naiara',
+    //   img: 'https://www.formulatv.com/images/fgaleria/85600/85667_cv03.jpg',
+    // },
+    // {
+    //   id: 'opcion2',
+    //   nombre: 'Lucas',
+    //   img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxryLaY3O24KCCrYp8xiLKTxju6j9miEh8Vg&s',
+    // },
     {
-      id: 'opcion1',
-      nombre: 'Naiara',
-      img: 'https://www.formulatv.com/images/fgaleria/85600/85667_cv03.jpg',
-    },
-    {
-      id: 'opcion2',
+      idArtista: 1,
       nombre: 'Lucas',
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxryLaY3O24KCCrYp8xiLKTxju6j9miEh8Vg&s',
+      apellidos: 'a',
+      biografia: 'Mató a una mosca',
+      sexo: 'Masculino',
+      linkFoto: 'www.google.es',
     },
   ];
 
@@ -31,7 +42,8 @@ export class DemoComponent {
   constructor(
     private authService: AuthService,
     private service: AuthMockService,
-    private votingService: VotingMockService
+    private votingServiceMock: VotingMockService,
+    private votingService: VotingService
   ) {
     this.authService.votoRealizado$.subscribe((votoRealizado) => {
       this.votoRealizado = votoRealizado;
@@ -40,9 +52,19 @@ export class DemoComponent {
   }
 
   ngOnInit() {
-    this.votingService.obtenerVotos().subscribe({
+    this.votingService.getParticipantes().subscribe({
       next: (response) => {
-        this.votos = response.votos;
+        this.participantes = response;
+        console.log(this.participantes);
+      },
+      error: (err) => {
+        console.error('Error al obtener los participantes:', err);
+      },
+    });
+    this.votingService.getVotos().subscribe({
+      next: (response) => {
+        this.votos = response;
+        console.log('getVotos', response);
       },
       error: (err) => {
         console.error('Error al obtener los votos:', err);
@@ -55,12 +77,15 @@ export class DemoComponent {
     this.votoRealizado = localStorage.getItem('votoRealizado');*/
   }
 
-  votar(nombre: string) {
-    const voto: VoteDto = new VoteDto('usuario', nombre);
+  votar(id: number) {
+    const voto: VoteDto = {
+      idArtista: id,
+    };
     this.votingService.votar(voto).subscribe({
       next: (response) => {
-        this.votos = response.votos;
-        this.authService.votar(nombre);
+        console.log(response);
+        //this.votos = response.votos;
+        //this.authService.votar(id);
       },
       error: (err) => {
         alert('Error al contabilizar el voto');

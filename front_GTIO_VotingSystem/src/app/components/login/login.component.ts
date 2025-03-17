@@ -25,21 +25,20 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private service: AuthMockService,
+    private service: LoginService,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
-      nombreUsuario: [''],
+      email: [''],
       password: [''],
     });
   }
 
   login() {
-    const user: LoginDto = new LoginDto(
-      this.loginForm.value.nombreUsuario,
-      this.loginForm.value.password
-    );
-
+    const user: LoginDto = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password,
+    };
     this.service.login(user).subscribe({
       next: (response) => {
         this.authService.login(response.token);

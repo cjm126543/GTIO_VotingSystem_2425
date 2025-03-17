@@ -1,0 +1,26 @@
+services:
+  sql1:
+    image: rapidfort/microsoft-sql-server-2019-ib:latest
+    container_name: sql1
+    hostname: sql1
+    networks:
+      backend_net:
+        ipv4_address: 172.18.0.2
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "M1c0ntr4s3n4"
+      MSSQL_PID: "Developer"
+    volumes:
+      - ./AltaTablasYMaestros.sql:/tmp/mssql/db_scripts/AltaTablasYMaestros.sql
+      - ./BorrarTablas.sql:/tmp/mssql/db_scripts/BorrarTablas.sql
+    command: ["/bin/bash", "-c", "/opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P M1c0ntr4s3n4 -C -i /tmp/mssql/db_scripts/AltaTablasYMaestros.sql && wait"]
+
+networks:
+  backend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

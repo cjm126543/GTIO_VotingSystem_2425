@@ -1,10 +1,10 @@
 <h1 class="titulo">Vota por tu participante favorito de OT</h1>
 <div class="option-pack">
   <div *ngFor="let participante of participantes" class="opcion">
-    <img [src]="participante.img" [alt]="participante.nombre" />
+    <img [src]="participante.linkFoto" [alt]="participante.nombre" />
     <p>{{ participante.nombre }}</p>
     <button
-      (click)="votar(participante.id)"
+      (click)="votar(participante.idArtista)"
       [disabled]="votoRealizado || !isLoggedIn()"
     >
       {{ isLoggedIn() ? "Votar" : "Inicia sesión para votar" }}
@@ -19,7 +19,9 @@
     <div class="progress-bar">
       <div
         class="progress"
-        [style.width]="(votos[participante.id] / totalVotos()) * 100 + '%'"
+        [style.width]="
+          (votos[participante.idArtista] / totalVotos()) * 100 + '%'
+        "
       ></div>
     </div>
     <p>{{ votos[participante.nombre] }} votos</p>

@@ -8,7 +8,7 @@ import { LoginDto } from '../dtos/loginDto';
 })
 export class AuthMockService {
   login(login: LoginDto) {
-    if (login.nombreUsuario === 'user' && login.password === 'password') {
+    if (login.email === 'user@example.com' && login.password === 'password') {
       return of({ token: 'fake-jwt-token', votoRealizado: false }).pipe(
         delay(1000)
       );

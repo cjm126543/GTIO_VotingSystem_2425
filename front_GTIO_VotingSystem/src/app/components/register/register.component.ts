@@ -27,7 +27,7 @@ export class RegisterComponent {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private service: AuthMockService,
+    private service: RegisterService,
     private authService: AuthService
   ) {
     this.registerForm = this.fb.group(
@@ -51,25 +51,23 @@ export class RegisterComponent {
           '',
           [Validators.required, Validators.pattern(/^[a-zA-ZñÑ]+$/)],
         ],
-        nombreUsuario: ['', [Validators.required]],
       },
       { validators: this.passwordMatchValidator() }
     );
   }
 
   register() {
-    const user: RegisterDto = new RegisterDto(
-      this.registerForm.value.nombre,
-      this.registerForm.value.apellido,
-      this.registerForm.value.nombreUsuario,
-      this.registerForm.value.email,
-      this.registerForm.value.password
-    );
+    const user: RegisterDto = {
+      nombre: this.registerForm.value.nombre,
+      apellidos: this.registerForm.value.apellido,
+      correo: this.registerForm.value.email,
+      contrasenia: this.registerForm.value.password,
+    };
 
     this.service.register(user).subscribe({
       next: (response) => {
-        this.authService.login(response.token);
-        this.router.navigate(['/demo']);
+        //this.authService.login(response.token);
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         alert('Error en el registro');

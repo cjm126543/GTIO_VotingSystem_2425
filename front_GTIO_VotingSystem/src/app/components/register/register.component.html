@@ -16,15 +16,6 @@
       * Ingrese un apellido válido
     </p>
     <input
-      type="text"
-      formControlName="nombreUsuario"
-      placeholder="Nombre de usuario"
-      required
-    />
-    <p *ngIf="nombreUsuario?.invalid && nombreUsuario?.touched" class="error">
-      * Ingrese un nombre de usuario válido
-    </p>
-    <input
       type="email"
       formControlName="email"
       placeholder="Correo electrónico"

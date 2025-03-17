@@ -4,9 +4,9 @@
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <input
       type="text"
-      formControlName="nombreUsuario"
-      placeholder="Nombre de usuario"
-      pattern="[a-zA-Z0-9]+"
+      formControlName="email"
+      placeholder="Correo electrónico"
+      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
       required
     />
 
