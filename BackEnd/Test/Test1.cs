@@ -1,10 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 
 namespace Test
 {
     [TestClass] 
     public class SampleTests
     {
+        private string _connectionString;
+
         [TestInitialize]
         public void Setup()
         {
