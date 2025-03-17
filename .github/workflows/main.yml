@@ -16,8 +16,6 @@ jobs:
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0' 
 
       - name: Restore dependencies
         run: dotnet restore BackEnd/BackEnd/
@@ -26,4 +24,4 @@ jobs:
         run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test BackEnd/Test/ --no-build --configuration Release --logger "console;verbosity=detailed"
+        run: dotnet test BackEnd/Test/ --configuration Release --logger "console;verbosity=detailed"
