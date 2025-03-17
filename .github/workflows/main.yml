@@ -26,4 +26,4 @@ jobs:
         run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test BackEnd/Test/Test1.cs --no-build --configuration Release --logger "console;verbosity=detailed"
+        run: dotnet test BackEnd/Test/ --no-build --configuration Release --logger "console;verbosity=detailed"
