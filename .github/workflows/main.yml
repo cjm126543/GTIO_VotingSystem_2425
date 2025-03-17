@@ -3,7 +3,7 @@ name: Run Tests on Merge
 on:
   push:
     branches:
-      - main  # Solo se ejecuta cuando hay un merge a main
+      - test 
 
 jobs:
   test:
@@ -17,13 +17,13 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0'  # Ajusta la versión según tu proyecto
+          dotnet-version: '8.0' 
 
       - name: Restore dependencies
         run: dotnet restore backend/
 
       - name: Build project
-        run: dotnet build backend/ --no-restore --configuration Release
+        run: dotnet build BackEnd/BackEnd --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test backend/ --no-build --configuration Release
+        run: dotnet test BackEnd/Test --no-build --configuration Release
