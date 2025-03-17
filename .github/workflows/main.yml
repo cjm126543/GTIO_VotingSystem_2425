@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '8.0' 
 
       - name: Restore dependencies
-        run: dotnet restore backend/
+        run: dotnet restore BackEnd/BackEnd/
 
       - name: Build project
-        run: dotnet build BackEnd/BackEnd --no-restore --configuration Release
+        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test BackEnd/Test --no-build --configuration Release
+        run: dotnet test BackEnd/Test/ --no-build --configuration Release
