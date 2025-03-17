@@ -1,12 +1,24 @@
 ﻿namespace Test
 {
-    [TestClass]
-    public sealed class Test1
+    using System;
+    using Xunit;
+    using Xunit.Abstractions;
+
+    public class MyTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        private readonly ITestOutputHelper _output;
+
+        public MyTests(ITestOutputHelper output)
         {
-            Console.WriteLine("Prueba para ver si ejecutan los test");
+            _output = output;
+        }
+
+        [Fact]
+        public void TestWithOutput()
+        {
+            _output.WriteLine("Este es un mensaje de prueba.");
+            Assert.True(true);
         }
     }
+
 }
