@@ -59,7 +59,6 @@ public class VoteController : ControllerBase
         return Ok(new { message = "Voto registrado con éxito" });
     }
 
-    [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> ObtenerTodosLosVotos()
     {
