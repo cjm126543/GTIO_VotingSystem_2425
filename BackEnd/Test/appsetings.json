@@ -1,0 +1,5 @@
+{
+	"ConnectionStrings": {
+		"MiConexionSQL": "Server=localhost;Database=TestDB;Integrated Security=True;TrustServerCertificate=True;"
+	}
+}
