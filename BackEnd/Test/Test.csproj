@@ -14,8 +14,6 @@
 
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-	  <Using Include="Microsoft.Extensions.Configuration.Json"/>
-	  <Using Include ="Microsoft.Extensions.Configuration.Binder"/>
 	  
   </ItemGroup>
 
