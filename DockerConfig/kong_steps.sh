@@ -37,3 +37,14 @@ curl -siX POST http://localhost:8001/consumers/postman/key-auth --data key=$KEY
 # Restrict back route with authentication (search apikey in headers)
 curl -sX POST http://localhost:8001/routes/back_route/plugins --data "name=key-auth" --data "config.key_names=apikey"
 
+# Enable log registering for every connection made through Kong API Gateway
+# NOTE: for viewing log -> docker exec <container ID> cat /tmp/kong_file.log
+curl -X POST http://localhost:8001/plugins/ --header "accept: application/json" --header "Content-Type: application/json" --data '
+{
+    "name": "file-log",
+    "config": {
+        "path": "/tmp/kong_file.log"
+    }
+}
+'
+
