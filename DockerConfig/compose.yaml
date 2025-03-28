@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  sql1:
+    image: rapidfort/microsoft-sql-server-2019-ib:latest
+    container_name: sql1
+    hostname: sql1
+    networks:
+      backend_net:
+        ipv4_address: 172.18.0.2
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "M1c0ntr4s3n4"
+      MSSQL_PID: "Developer"
+    volumes:
+      - ./BBDD/AltaTablasYMaestros.sql:/tmp/mssql/db_scripts/AltaTablasYMaestros.sql
+      - ./BBDD/BorrarTablas.sql:/tmp/mssql/db_scripts/BorrarTablas.sql
+    command: >
+      /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 30 && 
+      /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P M1c0ntr4s3n4 -C -i /tmp/mssql/db_scripts/AltaTablasYMaestros.sql && wait"
+
+  back:
+    build:
+      context: ../BackEnd
+      dockerfile: BackEnd/Dockerfile
+    container_name: back
+    depends_on:
+      - sql1
+    networks:
+      backend_net:
+        ipv4_address: 172.18.0.3
+    ports:
+      - "44363:44363"
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  front:
+    build:
+      context: ../front_GTIO_VotingSystem
+      dockerfile: ../DockerConfig/FRONT/Dockerfile
+    container_name: front
+    depends_on:
+      - back
+    networks:
+      frontend_net:
+        ipv4_address: 172.20.0.2
+    ports:
+      - "4200:4200"
+    working_dir: /app
+    command: ["npx", "ng", "serve", "--host", "0.0.0.0"]
+
+networks:
+  backend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
+
+  frontend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
