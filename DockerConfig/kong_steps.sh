@@ -31,6 +31,13 @@ curl -sX PATCH --url localhost:8001/services/$SERVICE_NAME/routes/back_route --d
 # Create a consumer for postman
 curl -siX POST http://localhost:8001/consumers --data username=postman
 
+# Asigno el consumidor al grupo permitido
+curl -X POST http://localhost:8001/consumers/postman/acls \
+   --header "Content-Type: application/json" \
+   --data '{
+     "group": "group1"
+   }'
+
 # Assign a key to the customer ($KEY is defined as ENVIRON)
 curl -siX POST http://localhost:8001/consumers/postman/key-auth --data key=$KEY
 
@@ -47,4 +54,19 @@ curl -X POST http://localhost:8001/plugins/ --header "accept: application/json" 
     }
 }
 '
-
+# ACL https://docs.konghq.com/hub/kong-inc/acl/how-to/basic-example/
+curl -X POST http://localhost:8001/routes/back_route/plugins \
+   --header "accept: application/json" \
+   --header "Content-Type: application/json" \
+   --data '
+   {
+ "name": "acl",
+ "config": {
+   "allow": [
+     "group1",
+     "group2"
+   ],
+   "hide_groups_header": true
+ }
+} 
+   '
