@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  # Servicio de Kong (API Gateway)
+  kong:
+    build: .                # Construye la imagen usando el Dockerfile en el directorio actual
+    container_name: kong    # Nombre del contenedor (opcional para referencia)
+    depends_on:
+      - db
+      - backend
+    environment:
+      # Configuración de Kong para usar PostgreSQL como base de datos
+      KONG_DATABASE: "postgres"
+      KONG_PG_HOST: "db"
+      KONG_PG_USER: "kong"
+      KONG_PG_PASSWORD: "kong"
+      # (KONG_PG_DATABASE por defecto es "kong", acorde a POSTGRES_DB)
+      # Puertos de Kong: 8000 (proxy) y 8001 (admin API)
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      KONG_ADMIN_LISTEN: "127.0.0.1:8001"
+    ports:
+      - "8000:8000"   # Puerto proxy (entradas API)
+      - "8001:8001"   # Puerto Admin API (expuesto opcionalmente para depuración)
+    networks:
+      - kong-net
+
+  # Servicio de base de datos PostgreSQL para Kong
+  db:
+    image: postgres:13-alpine
+    container_name: kong-db
+    environment:
+      POSTGRES_USER: "kong"
+      POSTGRES_PASSWORD: "kong"
+      POSTGRES_DB: "kong"
+    volumes:
+      - kong_data:/var/lib/postgresql/data
+    networks:
+      - kong-net
+
+  # Servicio backend de ejemplo (aplicación upstream)
+  backend:
+    image: hashicorp/http-echo:latest
+    container_name: backend
+    command:
+      - "-listen=:8080"            # Configura el servidor para escuchar en puerto 8080
+      - "-text=Hello from backend" # Mensaje de ejemplo que devuelve el backend
+    networks:
+      - kong-net
+
+# Definición de la red Docker compartida
+networks:
+  kong-net:
+    driver: bridge
+
+# Volumen para persistir datos de Postgres
+volumes:
+  kong_data:
