@@ -525,3 +525,4 @@ C:\Users\cjime\Documents\Universidad\GTIO\GTIO_VotingSystem_2425\BackEnd\BackEnd
 C:\Users\cjime\Documents\Universidad\GTIO\GTIO_VotingSystem_2425\BackEnd\BackEnd\obj\Debug\net8.0\BackEnd.pdb
 C:\Users\cjime\Documents\Universidad\GTIO\GTIO_VotingSystem_2425\BackEnd\BackEnd\obj\Debug\net8.0\BackEnd.genruntimeconfig.cache
 C:\Users\cjime\Documents\Universidad\GTIO\GTIO_VotingSystem_2425\BackEnd\BackEnd\obj\Debug\net8.0\ref\BackEnd.dll
+C:\Users\cjime\Documents\Universidad\GTIO\GTIO_VotingSystem_2425\BackEnd\BackEnd\bin\Debug\net8.0\appsettings.test.json

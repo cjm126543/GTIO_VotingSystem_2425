@@ -1,9 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\varel\\OneDrive\\Escritorio\\Ing Inform\u00E1tica\\Master\\cjm126543\\GTIO_VotingSystem_2425\\BackEnd\\",
+  "WorkspaceRootPath": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\varel\\onedrive\\escritorio\\ing inform\u00E1tica\\master\\cjm126543\\gtio_votingsystem_2425\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\appsettings.test.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\appsettings.test.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\controllers\\artistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\controllers\\artistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|c:\\users\\cjime\\documents\\universidad\\gtio\\gtio_votingsystem_2425\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A4514AA4-1039-45DB-8C30-8146CD848D30}|BackEnd\\BackEnd.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -14,20 +42,111 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\varel\\OneDrive\\Escritorio\\Ing Inform\u00E1tica\\Master\\cjm126543\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Program.cs",
               "RelativeDocumentMoniker": "BackEnd\\Program.cs",
-              "ToolTip": "C:\\Users\\varel\\OneDrive\\Escritorio\\Ing Inform\u00E1tica\\Master\\cjm126543\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Program.cs",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Program.cs",
               "RelativeToolTip": "BackEnd\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-16T12:04:55.588Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BackEnd.http",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\BackEnd.http",
+              "RelativeDocumentMoniker": "BackEnd\\BackEnd.http",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\BackEnd.http",
+              "RelativeToolTip": "BackEnd\\BackEnd.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-04-30T17:20:15.659Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeToolTip": "BackEnd\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T17:19:34.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.test.json",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\appsettings.test.json",
+              "RelativeDocumentMoniker": "BackEnd\\appsettings.test.json",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\appsettings.test.json",
+              "RelativeToolTip": "BackEnd\\appsettings.test.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-30T17:19:16.294Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "BackEnd\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\appsettings.Development.json",
+              "RelativeToolTip": "BackEnd\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-30T17:19:14.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Models\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Models\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Models\\AppDbContext.cs",
+              "RelativeToolTip": "BackEnd\\Models\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T17:19:10.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ArtistController.cs",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Controllers\\ArtistController.cs",
+              "RelativeDocumentMoniker": "BackEnd\\Controllers\\ArtistController.cs",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Controllers\\ArtistController.cs",
+              "RelativeToolTip": "BackEnd\\Controllers\\ArtistController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T17:19:06.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "BackEnd\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\cjime\\Documents\\Universidad\\GTIO\\GTIO_VotingSystem_2425\\BackEnd\\BackEnd\\Properties\\launchSettings.json",
+              "RelativeToolTip": "BackEnd\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-30T17:18:53.562Z",
               "EditorCaption": ""
             },
             {
