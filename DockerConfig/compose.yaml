@@ -1,4 +1,4 @@
-#version: "3.8"
+version: "3.8"
 
 services:
   sql1:
@@ -24,7 +24,7 @@ services:
   back:
     build:
       context: ../BackEnd
-      dockerfile: BackEnd/Dockerfile
+      dockerfile: Dockerfile
     container_name: back
     depends_on:
       - sql1
@@ -52,6 +52,47 @@ services:
     working_dir: /app
     command: ["npx", "ng", "serve", "--host", "0.0.0.0"]
 
+  # Servicio de Kong (API Gateway)
+  kong:
+    build: 
+      context: ../DockerConfig
+      dockerfile: Dockerfile                # Construye la imagen usando el Dockerfile en el directorio actual
+    container_name: kong    # Nombre del contenedor (opcional para referencia)
+    depends_on:
+      - db
+      - front
+      - back
+    environment:
+      # Configuración de Kong para usar PostgreSQL como base de datos
+      KONG_DATABASE: "postgres"
+      KONG_PG_HOST: "db"
+      KONG_PG_USER: "kong"
+      KONG_PG_PASSWORD: "kong"
+      # (KONG_PG_DATABASE por defecto es "kong", acorde a POSTGRES_DB)
+      # Puertos de Kong: 8000 (proxy) y 8001 (admin API)
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      KONG_ADMIN_LISTEN: "127.0.0.1:8001"
+    ports:
+      - "8000:8000"   # Puerto proxy (entradas API)
+      - "8001:8001"   # Puerto Admin API (expuesto opcionalmente para depuración)
+      - "8002:8002"
+    networks:
+      - kong-net
+
+  # Servicio de base de datos PostgreSQL para Kong
+  db:
+    image: postgres:13-alpine
+    container_name: kong-db
+    environment:
+      POSTGRES_USER: "kong"
+      POSTGRES_PASSWORD: "kong"
+      POSTGRES_DB: "kong"
+    volumes:
+      - kong_data:/var/lib/postgresql/data
+    networks:
+      - kong-net
+
+# Definición de la red Docker compartida
 networks:
   backend_net:
     driver: bridge
@@ -66,3 +107,14 @@ networks:
       config:
         - subnet: 172.20.0.0/16
           gateway: 172.20.0.1
+
+  kong-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
+
+# Volumen para persistir datos de Postgres
+volumes:
+  kong_data:

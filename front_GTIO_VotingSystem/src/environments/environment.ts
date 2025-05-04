@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://ec2-44-213-67-148.compute-1.amazonaws.com:8080',
+  apiUrl: 'http://back-load-balancer-1381838054.us-east-1.elb.amazonaws.com:8080',
 };

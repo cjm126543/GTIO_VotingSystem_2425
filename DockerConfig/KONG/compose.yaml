@@ -1,13 +1,11 @@
+# Compose para AWS
 version: "3.8"
-
 services:
-  # Servicio de Kong (API Gateway)
   kong:
-    build: .                # Construye la imagen usando el Dockerfile en el directorio actual
+    image: 952851253352.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:kong-latest
     container_name: kong    # Nombre del contenedor (opcional para referencia)
     depends_on:
       - db
-      - backend
     environment:
       # Configuración de Kong para usar PostgreSQL como base de datos
       KONG_DATABASE: "postgres"
@@ -21,8 +19,7 @@ services:
     ports:
       - "8000:8000"   # Puerto proxy (entradas API)
       - "8001:8001"   # Puerto Admin API (expuesto opcionalmente para depuración)
-    networks:
-      - kong-net
+      - "8002:8002"
 
   # Servicio de base de datos PostgreSQL para Kong
   db:
@@ -34,24 +31,6 @@ services:
       POSTGRES_DB: "kong"
     volumes:
       - kong_data:/var/lib/postgresql/data
-    networks:
-      - kong-net
 
-  # Servicio backend de ejemplo (aplicación upstream)
-  backend:
-    image: hashicorp/http-echo:latest
-    container_name: backend
-    command:
-      - "-listen=:8080"            # Configura el servidor para escuchar en puerto 8080
-      - "-text=Hello from backend" # Mensaje de ejemplo que devuelve el backend
-    networks:
-      - kong-net
-
-# Definición de la red Docker compartida
-networks:
-  kong-net:
-    driver: bridge
-
-# Volumen para persistir datos de Postgres
 volumes:
   kong_data:
