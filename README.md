@@ -4,10 +4,8 @@
 - Tener instalado WSL en sistemas windows (si el host donde se va a ejecutar tiene este sistema operativo)
 
 ## Pasos para la ejecución
-1. Acceder a la carpeta DockerConfig/BBDD y ejecutar el comando ```docker compose -d```
-2. Acceder a la carpeta DockerConfig/BACK y ejecutar el comando ```docker compose -d```
-3. Acceder a la carpeta DockerConfig/FRONT y ejecutar el comando ```docker compose -d```
-4. Acceder a la carpeta DockerConfig y modificar el script ```kong_steps.sh```.
+1. Acceder a la carpeta DockerConfig y modificar el script ```kong_steps.sh```.
+2. Acceder a la carpeta DockerConfig y ejecutar el comando ```docker compose -d```
 -   En caso de sistema UNIX
     - Asignar a la variable $IP la dirección del interfaz de red principal usado (eth0, enp0s3 o similares, consultable con ```ifconfig```)
     - Ejecutar el script
