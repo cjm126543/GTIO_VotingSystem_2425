@@ -44,31 +44,34 @@ jobs:
         with:
           name: published-app
           path: ./publish
+
+          
   frontend-tests:
     name: Run Angular Frontend Tests
     runs-on: ubuntu-latest
-
+  
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
+  
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-
+          node-version: '20'  # <--- Aquí el cambio
+  
       - name: Install dependencies
         run: |
           cd front_GTIO_VotingSystem
           npm install
-
+  
       - name: Run Angular tests
         run: |
           cd front_GTIO_VotingSystem
           npm test -- --no-watch --browsers=ChromeHeadless --code-coverage
-
+  
       - name: Upload test coverage report (Frontend)
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
           path: front_GTIO_VotingSystem/coverage/
+
