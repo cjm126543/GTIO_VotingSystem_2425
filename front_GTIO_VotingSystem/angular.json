@@ -67,7 +67,10 @@
               "buildTarget": "front_GTIO_VotingSystem:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "allowedHosts": ["localhost","front-load-balancer-1251955972.us-east-1.elb.amazonaws.com"]
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
