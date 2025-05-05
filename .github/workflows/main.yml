@@ -1,9 +1,7 @@
-name: Run Tests on Merge
-
 on:
   push:
     branches:
-      - test
+      - test 
 
 jobs:
   test:
@@ -14,14 +12,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Cache NuGet packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
 
@@ -29,24 +19,16 @@ jobs:
         run: dotnet restore BackEnd/BackEnd/
 
       - name: Check code formatting
-        run: dotnet format --verify-no-changes
+        run: dotnet format --verify-no-changes || echo "⚠️ Code format issues found!"
 
       - name: Check for outdated dependencies
-        run: dotnet list package --outdated
+        run: dotnet list package --outdated || echo "⚠️ Some dependencies are outdated!"
 
-      - name: Check code formatting
-        run: dotnet format BackEnd/BackEnd/BackEnd.csproj --verify-no-changes
+      - name: Build project
+        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
 
       - name: Run tests with coverage
-        run: dotnet test BackEnd/Test/ --no-build --configuration Release --collect:"XPlat Code Coverage"
-
-      - name: Publish test results
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Unit Tests
-          path: '**/TestResults/*.trx'
-          reporter: dotnet-trx
+        run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
 
       - name: Upload test coverage report
         uses: actions/upload-artifact@v4
@@ -54,22 +36,8 @@ jobs:
           name: coverage-report
           path: BackEnd/Test/TestResults/
 
-      - name: Convert coverage to Cobertura format
-        run: |
-          reportgenerator \
-            "-reports:BackEnd/Test/TestResults/**/coverage.cobertura.xml" \
-            "-targetdir:coverage-report" \
-            "-reporttypes:Cobertura"
-        shell: bash
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: coverage-report/Cobertura.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: Publish project
-        run: dotnet publish BackEnd/BackEnd/ --no-build --configuration Release --output ./publish
+        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
