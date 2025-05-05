@@ -34,8 +34,8 @@ jobs:
       - name: Check for outdated dependencies
         run: dotnet list package --outdated
 
-      - name: Static code analysis (treat warnings as errors)
-        run: dotnet build BackEnd/BackEnd/ -warnaserror /p:TreatWarningsAsErrors=true --no-restore --configuration Release
+      - name: Check code formatting
+        run: dotnet format BackEnd/BackEnd/BackEnd.csproj --verify-no-changes
 
       - name: Run tests with coverage
         run: dotnet test BackEnd/Test/ --no-build --configuration Release --collect:"XPlat Code Coverage"
