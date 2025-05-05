@@ -1,3 +1,11 @@
+#Bienvenida
+Este es el readme del repositorio GTIOVotingSystem2425, desarrollado por Carlos Jimeno, David Muñoz, Mayra Nogales, Iñigo Varela y Miguel Sagaseta de Ilúrdoz.
+
+La documentación de este proyecto, puede encontrarse debidamente ordenada y clasificada dentro de la sección *wiki* de este repositorio.
+También, dentro de la sección *projects* puede encontrarse el Kanban de nuestro proyecto.
+
+Un saludo, Javi.
+
 # Como ejecutar el proyecto
 ## Requisitos previos
 - Tener instalado docker-engine para poder crear los contenedores docker
