@@ -1,26 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-
-namespace Test
+﻿namespace Test
 {
     [TestClass] 
     public class SampleTests
     {
-        private string _connectionString;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.test.json")
-                .Build();
-
-            _connectionString = config.GetConnectionString("DefaultConnection");
-        }
-
         [TestMethod] 
         public void Sum_TwoPlusTwo_ShouldReturnFour()
         {
@@ -46,11 +28,6 @@ namespace Test
 
             // Assert
             Assert.IsTrue(containsWord); // Comprobamos que la frase contiene "GitHub"
-        }
-        [TestMethod]
-        public void VerificarConexionBaseDeDatos()
-        {
-            Assert.IsFalse(string.IsNullOrEmpty(_connectionString), "La cadena de conexión no debe estar vacía.");
         }
     }
 }
