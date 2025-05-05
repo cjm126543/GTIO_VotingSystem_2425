@@ -44,6 +44,13 @@ jobs:
         with:
           name: published-app
           path: ./publish
+
+      - name: Install codeCov
+        run: npm install --save-dev vitest @vitest/coverage-v8 
+        
+      - name: Run coverage
+        run: npx vitest run --coverage
+        
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
