@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - test 
+      - productive
 
 jobs:
   test:
