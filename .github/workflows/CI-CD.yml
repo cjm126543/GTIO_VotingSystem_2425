@@ -1,0 +1,133 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - productive
+
+env:
+  AWS_REGION: us-east-1
+  ECR_FRONT_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/front
+  ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
+
+jobs:
+  # Job para ejecutar pruebas del Backend
+  run_backend_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Restore dependencies (Backend)
+        run: dotnet restore BackEnd/BackEnd/
+
+      - name: Check code formatting (Backend)
+        run: dotnet format --verify-no-changes || echo "⚠️ Code format issues found!"
+
+      - name: Check for outdated dependencies (Backend)
+        run: dotnet list package --outdated || echo "⚠️ Some dependencies are outdated!"
+
+      - name: Build project (Backend)
+        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
+
+      - name: Run tests with coverage (Backend)
+        run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
+
+      - name: Upload test coverage report (Backend)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-backend
+          path: BackEnd/Test/TestResults/
+
+      - name: Publish project (Backend)
+        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish-backend
+
+      - name: Upload build artifact (Backend)
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-backend
+          path: ./publish-backend
+
+  # Job para ejecutar pruebas del Frontend
+  run_frontend_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Frontend)
+        run: npm install
+        working-directory: front_GTIO_VotingSystem
+
+      - name: Run tests (Frontend)
+        run: npm test
+        working-directory: front_GTIO_VotingSystem
+
+      - name: Build project (Frontend)
+        run: npm run build
+        working-directory: front_GTIO_VotingSystem
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: front_GTIO_VotingSystem/build/
+
+  # Job de despliegue
+  deploy:
+    needs:
+      - run_backend_tests
+      - run_frontend_tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Iniciar sesión en AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login a ECR para Frontend
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_FRONT_REPO
+
+      - name: Login a ECR para Backend
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_BACK_REPO
+
+      - name: Construir imagen FRONT y subir a ECR
+        working-directory: front_GTIO_VotingSystem
+        run: |
+          docker build -t front .
+          docker tag front:latest $ECR_FRONT_REPO:latest
+          docker push $ECR_FRONT_REPO:latest
+
+      - name: Construir imagen BACK y subir a ECR
+        working-directory: BackEnd/BackEnd
+        run: |
+          docker build -t back .
+          docker tag back:latest $ECR_BACK_REPO:latest
+          docker push $ECR_BACK_REPO:latest
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Inicializar Terraform
+        working-directory: terraform
+        run: terraform init
+
+      - name: Planificar cambios de infraestructura
+        working-directory: terraform
+        run: terraform plan -out=tfplan
+
+      - name: Aplicar infraestructura con Terraform
+        working-directory: terraform
+        run: terraform apply -auto-approve tfplan
