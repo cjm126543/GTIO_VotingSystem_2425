@@ -54,27 +54,31 @@ jobs:
   # Job para ejecutar pruebas del Frontend
   run_frontend_tests:
     runs-on: ubuntu-latest
+  
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Install dependencies (Frontend)
-        run: npm install
-        working-directory: front_GTIO_VotingSystem
-
-      - name: Run tests (Frontend)
-        run: npm test
-        working-directory: front_GTIO_VotingSystem
-
-      - name: Build project (Frontend)
-        run: npm run build
-        working-directory: front_GTIO_VotingSystem
-
-      - name: Upload frontend build artifact
+  
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+  
+      - name: Install dependencies
+        run: |
+          cd front_GTIO_VotingSystem
+          npm install
+  
+      - name: Run Angular tests
+        run: |
+          cd front_GTIO_VotingSystem
+          npm test -- --no-watch --browsers=ChromeHeadless --code-coverage
+  
+      - name: Upload test coverage report (Frontend)
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-build
-          path: front_GTIO_VotingSystem/build/
+          name: frontend-coverage-report
+          path: front_GTIO_VotingSystem/coverage/
 
   # Job de despliegue
   deploy:
