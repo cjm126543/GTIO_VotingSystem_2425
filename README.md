@@ -17,3 +17,4 @@
 En algunos casos puede que la ejecución del script ```kong_steps.sh``` termine la ejecución de los contenedores de front, back y bbdd. Este comportamiento se ha observado en sistemas UNIX, en WINDOWSNT los pasos de ejecución deberían bastar.
 
 En cualquier caso, para corregir esta anomalía basta con ejecutar los contenedores de nuevo, ```docker container start sql1 back front```
+
