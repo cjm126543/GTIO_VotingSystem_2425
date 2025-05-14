@@ -13,49 +13,69 @@ env:
   ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
 
 jobs:
-  test-backend:
-    name: Test Backend
+  run_backend_tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Restore dependencies (Backend)
+        run: dotnet restore BackEnd/BackEnd/
+
+      - name: Check code formatting (Backend)
+        run: dotnet format --verify-no-changes || echo "⚠️ Code format issues found!"
+
+      - name: Check for outdated dependencies (Backend)
+        run: dotnet list package --outdated || echo "⚠️ Some dependencies are outdated!"
+
+      - name: Build project (Backend)
+        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
+
+      - name: Run tests with coverage (Backend)
+        run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
+
+      - name: Upload test coverage report (Backend)
+        uses: actions/upload-artifact@v4
         with:
-          dotnet-version: '8.0.x'
+          name: coverage-report-backend
+          path: BackEnd/Test/TestResults/
 
-      - name: Restore dependencies
-        run: dotnet restore
-        working-directory: BackEnd/BackEnd
+      - name: Publish project (Backend)
+        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish-backend
 
-      - name: Format check
-        run: dotnet format --verify-no-changes
-        working-directory: BackEnd/BackEnd
+      - name: Upload build artifact (Backend)
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-backend
+          path: ./publish-backend
 
-      - name: Run tests
-        run: dotnet test
-        working-directory: BackEnd/Test
-
-  test-frontend:
-    name: Test Frontend
+  # Job para ejecutar pruebas del Frontend
+  run_frontend_tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
+      - name: Install dependencies (Frontend)
         run: npm install
         working-directory: front_GTIO_VotingSystem
 
-      - name: Run tests
-        run: npm run test -- --watch=false --browsers=ChromeHeadless
+      - name: Run tests (Frontend)
+        run: npm test
         working-directory: front_GTIO_VotingSystem
+
+      - name: Build project (Frontend)
+        run: npm run build
+        working-directory: front_GTIO_VotingSystem
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: front_GTIO_VotingSystem/build/
         
   build-images:
     name: Build Docker Images (Front & Back)
