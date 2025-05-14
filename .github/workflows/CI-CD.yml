@@ -4,87 +4,110 @@ on:
   push:
     branches:
       - productive
+  pull_request:
+    branches:
+      - productive
 env:
   AWS_REGION: us-east-1
   ECR_FRONT_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/front
   ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
 
 jobs:
-  # Job para ejecutar pruebas del Backend
-  run_backend_tests:
+  test-backend:
+    name: Test Backend
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v3
-
-      - name: Restore dependencies (Backend)
-        run: dotnet restore BackEnd/BackEnd/
-
-      - name: Check code formatting (Backend)
-        run: dotnet format --verify-no-changes || echo "⚠️ Code format issues found!"
-
-      - name: Check for outdated dependencies (Backend)
-        run: dotnet list package --outdated || echo "⚠️ Some dependencies are outdated!"
-
-      - name: Build project (Backend)
-        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
-
-      - name: Run tests with coverage (Backend)
-        run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
-
-      - name: Upload test coverage report (Backend)
-        uses: actions/upload-artifact@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          name: coverage-report-backend
-          path: BackEnd/Test/TestResults/
+          dotnet-version: '8.0.x'
 
-      - name: Publish project (Backend)
-        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish-backend
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: BackEnd/BackEnd
 
-      - name: Upload build artifact (Backend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: published-backend
-          path: ./publish-backend
+      - name: Format check
+        run: dotnet format --verify-no-changes
+        working-directory: BackEnd/BackEnd
 
-  # Job para ejecutar pruebas del Frontend
-  run_frontend_tests:
+      - name: Run tests
+        run: dotnet test
+        working-directory: BackEnd/Test
+
+  test-frontend:
+    name: Test Frontend
     runs-on: ubuntu-latest
-  
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
-  
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-  
+          node-version: '18'
+
       - name: Install dependencies
+        run: npm install
+        working-directory: front_GTIO_VotingSystem
+
+      - name: Run tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        working-directory: front_GTIO_VotingSystem
+
+  build-images:
+    name: Build Docker Images (Front & Back)
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-frontend]
+    if: |
+      github.event_name == 'push' && (
+        contains(github.event.head_commit.message, '[build]') ||
+        github.ref == 'refs/heads/productive'
+      )
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: docker compose version
+
+      - name: Build only front and back services
+        working-directory: DockerConfig
+        run: docker compose build front back
+
+      - name: Save backend image as DockerFile
         run: |
-          cd front_GTIO_VotingSystem
-          npm install
-  
-      - name: Run Angular tests
+          mkdir -p DockerConfig/BACK
+          docker save back > DockerConfig/BACK/DockerFile
+
+      - name: Save frontend image as DockerFile
         run: |
-          cd front_GTIO_VotingSystem
-          npm test -- --no-watch --browsers=ChromeHeadless --code-coverage
-  
-      - name: Upload test coverage report (Frontend)
+          mkdir -p DockerConfig/FRONT
+          docker save front > DockerConfig/FRONT/DockerFile
+
+      - name: Upload backend image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-coverage-report
-          path: front_GTIO_VotingSystem/coverage/
+          name: back-image
+          path: DockerConfig/BACK/DockerFile
 
-  # Job de despliegue
+      - name: Upload frontend image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: front-image
+          path: DockerConfig/FRONT/DockerFile
+
   deploy:
     needs:
-      - run_backend_tests
-      - run_frontend_tests
+      - test-backend
+      - test-frontend
+      - build-images
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' && github.ref == 'refs/heads/productive' ||
+      github.event_name == 'pull_request' && github.base_ref == 'productive'
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -107,14 +130,14 @@ jobs:
       - name: Construir imagen FRONT y subir a ECR
         working-directory: front_GTIO_VotingSystem
         run: |
-          docker build -t front .
+          docker build -t front . 
           docker tag front:latest $ECR_FRONT_REPO:latest
           docker push $ECR_FRONT_REPO:latest
 
       - name: Construir imagen BACK y subir a ECR
         working-directory: BackEnd/BackEnd
         run: |
-          docker build -t back .
+          docker build -t back . 
           docker tag back:latest $ECR_BACK_REPO:latest
           docker push $ECR_BACK_REPO:latest
 
