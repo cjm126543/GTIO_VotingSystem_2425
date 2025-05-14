@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - productive
-
 env:
   AWS_REGION: us-east-1
   ECR_FRONT_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/front
