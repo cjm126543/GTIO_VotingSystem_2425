@@ -136,6 +136,10 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
+      - name: Verificar configuración de AWS
+        run: |
+          aws sts get-caller-identity
+          aws configure list
 
       - name: Iniciar sesión en AWS
         uses: aws-actions/configure-aws-credentials@v3
