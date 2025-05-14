@@ -9,7 +9,7 @@ on:
       - productive
 env:
   AWS_REGION: us-east-1
-  ECR_FRONT_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/front
+  ECR_FRONT_REPO: 024663765236.dkr.ecr.us-east-1.amazonaws.com/front
   ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
 
 jobs:
