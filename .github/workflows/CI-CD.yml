@@ -131,6 +131,7 @@ jobs:
       - run_backend_tests
       - run_frontend_tests
       - build-images
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código
