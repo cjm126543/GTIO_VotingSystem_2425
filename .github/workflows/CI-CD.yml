@@ -10,7 +10,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_FRONT_REPO: 024663765236.dkr.ecr.us-east-1.amazonaws.com/front
-  ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
+  # ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
 
 jobs:
   run_backend_tests:
@@ -159,9 +159,9 @@ jobs:
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_FRONT_REPO
 
-      - name: Login a ECR para Backend
-        run: |
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_BACK_REPO
+      # - name: Login a ECR para Backend
+        #run: |
+         # aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_BACK_REPO
 
       - name: Construir imagen FRONT y subir a ECR
         working-directory: front_GTIO_VotingSystem
