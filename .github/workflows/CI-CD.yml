@@ -132,9 +132,6 @@ jobs:
       - run_frontend_tests
       - build-images
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' && github.ref == 'refs/heads/productive' ||
-      github.event_name == 'pull_request' && github.base_ref == 'productive'
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
