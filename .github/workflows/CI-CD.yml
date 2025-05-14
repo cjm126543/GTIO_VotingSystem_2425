@@ -56,7 +56,7 @@ jobs:
       - name: Run tests
         run: npm run test -- --watch=false --browsers=ChromeHeadless
         working-directory: front_GTIO_VotingSystem
-
+        
   build-images:
     name: Build Docker Images (Front & Back)
     runs-on: ubuntu-latest
