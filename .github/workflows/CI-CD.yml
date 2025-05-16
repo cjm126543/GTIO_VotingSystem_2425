@@ -135,8 +135,11 @@ jobs:
           valor=$(terraform output -raw ecr_repo_url)
           echo "valor: $valor"
           echo "ECR_REPO=$valor" >> $GITHUB_OUTPUT
-    outputs:
-      ecr_repo_url: ${{ steps.ecr_output.outputs.ECR_REPO }}
+      - name: Subir archivo como artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ecr-url
+          path: ecr_url.txt
         
   build-images:
     name: Build Docker Images (Front & Back)
@@ -146,8 +149,14 @@ jobs:
      # github.event_name == 'push' && contains(github.event.head_commit.message, 'imagen')
   
     steps:
-      - name: Usar URI del ECR
-        run: echo "La URI del ECR es ${{ needs.create_ecr.outputs.ecr_repo_url }}"
+      - name: Descargar artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: ecr-url
+      - name: Leer URI
+        run: |
+            valor=$(cat ecr_url.txt)
+            echo "URI ECR: $valor"
         
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -192,10 +201,14 @@ jobs:
           aws sts get-caller-identity
           aws configure list
           
-      - name: Mostrar URL del ECR
-        run: echo "ECR_REPO=$ECR_REPO"
-        env:
-          ECR_REPO: ${{ steps.ecr_output.outputs.ECR_REPO }}
+      - name: Descargar artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: ecr-url
+      - name: Leer URI
+        run: |
+            $ECR_REPO=$(cat ecr_url.txt)
+            echo "URI ECR: $valor"
     
       - name: Login en ECR
         run: |
