@@ -98,7 +98,7 @@ jobs:
       - name: Build only front and back services
         working-directory: DockerConfig
         run: |
-          docker compose -f compose.yml build front back  # Construye las imágenes front y back
+          docker compose -f compose.yaml build front back  # Construye las imágenes front y back
   
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
