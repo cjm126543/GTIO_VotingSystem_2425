@@ -106,12 +106,12 @@ jobs:
       - name: Save backend image as DockerFile
         run: |
           mkdir -p DockerConfig/BACK
-          docker save back > DockerConfig/BACK/DockerFile  
+          docker save dockerconfig-back > DockerConfig/BACK/DockerFile  
   
       - name: Save frontend image as DockerFile
         run: |
           mkdir -p DockerConfig/FRONT
-          docker save front > DockerConfig/FRONT/DockerFile  
+          docker save dockerconfig-front > DockerConfig/FRONT/DockerFile  
   
       - name: Upload backend image artifact
         uses: actions/upload-artifact@v4
