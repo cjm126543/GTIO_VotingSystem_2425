@@ -9,8 +9,6 @@ on:
       - productive
 env:
   AWS_REGION: us-east-1
-  ECR_FRONT_REPO: 024663765236.dkr.ecr.us-east-1.amazonaws.com/front
-  # ECR_BACK_REPO: <tu_id_ecr>.dkr.ecr.us-east-1.amazonaws.com/back
 
 jobs:
   run_backend_tests:
@@ -158,6 +156,19 @@ jobs:
       ECR_REPO: ${{ needs.create_ecr.outputs.ecr_repo }}
       AWS_REGION: us-east-1
     steps:
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+          
+      - name: Verificar configuración de AWS
+        run: |
+          aws sts get-caller-identity
+          aws configure list
+    
       - name: Login en ECR
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
