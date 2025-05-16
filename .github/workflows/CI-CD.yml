@@ -135,7 +135,8 @@ jobs:
           valor=$(terraform output -raw ecr_repo_url)
           echo "valor: $valor"
           echo "ECR_REPO=$valor" >> $GITHUB_OUTPUT
-
+    outputs:
+      ecr_repo_url: ${{ steps.ecr_output.outputs.ECR_REPO }}
         
   build-images:
     name: Build Docker Images (Front & Back)
@@ -175,7 +176,7 @@ jobs:
     needs: [create_ecr, run_backend_tests, run_frontend_tests, build-images]
     runs-on: ubuntu-latest
     env:
-      ECR_REPO: ${{ needs.create_ecr.outputs.ecr_repo }}
+      ECR_REPO: ${{ needs.create_ecr.outputs.ecr_repo_url }}
       AWS_REGION: us-east-1
     steps:
       - name: Configurar credenciales AWS
