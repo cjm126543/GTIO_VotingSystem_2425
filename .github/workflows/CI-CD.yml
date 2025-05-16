@@ -131,6 +131,7 @@ jobs:
           
       - name: Capturar URI del ECR
         id: ecr_output
+        working-directory: TerraFormConfig/ECR
         run: | 
           valor=$(terraform output -raw ecr_repo_url)
           echo "valor: $valor"
@@ -141,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ecr-url
-          path: ecr_url.txt
+          path: TerraFormConfig/ECR/ecr_url.txt
         
   build-images:
     name: Build Docker Images (Front & Back)
