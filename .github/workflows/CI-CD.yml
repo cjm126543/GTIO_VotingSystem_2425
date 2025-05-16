@@ -131,7 +131,9 @@ jobs:
           
       - name: Capturar URI del ECR
         id: ecr_output
-        run: echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_OUTPUT
+        run: | 
+          echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_OUTPUT
+          echo "valor : $ECR_REPO"
 
         
   build-images:
