@@ -132,6 +132,7 @@ jobs:
       - name: Capturar URI del ECR
         id: ecr_output
         run: echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_OUTPUT
+
         
   build-images:
     name: Build Docker Images (Front & Back)
@@ -141,6 +142,9 @@ jobs:
      # github.event_name == 'push' && contains(github.event.head_commit.message, 'imagen')
   
     steps:
+      - name: Usar URI del ECR
+        run: echo "La URI del ECR es ${{ needs.create_ecr.outputs.ecr_repo_url }}"
+        
       - name: Checkout repo
         uses: actions/checkout@v4
   
