@@ -89,28 +89,43 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Configurar credenciales AWS
-        uses: aws-actions/configure-aws-credentials@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
-          
-      - name: Verificar configuración de AWS
-        run: |
-          aws sts get-caller-identity
-          aws configure list
-          
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-        
-      - name: Init Terraform
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Init
+        working-directory: TerraFormConfig/ECR
         run: terraform init
 
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
+      - name: Check if ECR exists and import if needed
+        working-directory: TerraFormConfig/ECR
+        run: |
+          REPO_NAME="carlos/repo"
+          EXISTS=$(aws ecr describe-repositories --repository-names "$REPO_NAME" --region $AWS_REGION 2>/dev/null || true)
+          if [ -n "$EXISTS" ]; then
+            echo "Repository already exists. Importing into Terraform state..."
+            terraform import aws_ecr_repository.carlos_repo "$REPO_NAME" || true
+          else
+            echo "Repository does not exist. Terraform will create it."
+          fi
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
+      - name: Terraform Apply
+        working-directory: TerraFormConfig/ECR
+        run: terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
       - name: Capturar URI del ECR
         id: ecr_output
         run: echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_OUTPUT
