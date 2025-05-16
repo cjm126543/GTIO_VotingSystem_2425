@@ -152,12 +152,12 @@ jobs:
         working-directory: front_GTIO_VotingSystem
         run: |
           docker build -t dockerconfig-front . 
-          docker tag front:latest $ECR_FRONT_REPO:latest
+          docker tag dockerconfig-front:latest $ECR_FRONT_REPO:latest
           docker push $ECR_FRONT_REPO:latest
 
       - name: Construir imagen BACK y subir a ECR
         working-directory: BackEnd/BackEnd
         run: |
           docker build -t back . 
-          docker tag back:latest $ECR_BACK_REPO:latest
+          docker tag dockerconfig-back:latest $ECR_BACK_REPO:latest
           docker push $ECR_BACK_REPO:latest
