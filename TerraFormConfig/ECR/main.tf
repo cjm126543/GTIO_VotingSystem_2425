@@ -22,6 +22,3 @@ data "aws_vpc" "default_vpc" {
 data "aws_security_group" "default_sec_grp" {
   name = "default"
 }
-resource "aws_ecr_repository" "main" {
-  name = "app-repo"
-}
