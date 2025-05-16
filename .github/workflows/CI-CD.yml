@@ -103,28 +103,13 @@ jobs:
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
   
-      - name: Save backend image as DockerFile
+      - name: Save backend image in BackEnd/BackEnd
         run: |
-          mkdir -p DockerConfig/BACK
-          docker save dockerconfig-back > DockerConfig/BACK/DockerFile  
-  
-      - name: Save frontend image as DockerFile
+          docker save dockerconfig-back > BackEnd/BackEnd/DockerFile
+      
+      - name: Save frontend image in front_GTIO_VotingSystem
         run: |
-          mkdir -p DockerConfig/FRONT
-          docker save dockerconfig-front > DockerConfig/FRONT/DockerFile  
-  
-      - name: Upload backend image artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: back-image
-          path: DockerConfig/BACK/DockerFile
-  
-      - name: Upload frontend image artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: front-image
-          path: DockerConfig/FRONT/DockerFile
-
+          docker save dockerconfig-front > front_GTIO_VotingSystem/DockerFile
 
   deploy:
     needs:
@@ -166,7 +151,7 @@ jobs:
       - name: Construir imagen FRONT y subir a ECR
         working-directory: front_GTIO_VotingSystem
         run: |
-          docker build -t front . 
+          docker build -t dockerconfig-front . 
           docker tag front:latest $ECR_FRONT_REPO:latest
           docker push $ECR_FRONT_REPO:latest
 
