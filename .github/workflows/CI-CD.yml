@@ -186,6 +186,11 @@ jobs:
         run: |
           aws sts get-caller-identity
           aws configure list
+          
+      - name: Mostrar URL del ECR
+        run: echo "ECR_REPO=$ECR_REPO"
+        env:
+          ECR_REPO: ${{ steps.ecr_output.outputs.ECR_REPO }}
     
       - name: Login en ECR
         run: |
