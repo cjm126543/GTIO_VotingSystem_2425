@@ -103,7 +103,10 @@ jobs:
         run: |
           aws sts get-caller-identity
           aws configure list
-
+          
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        
       - name: Init Terraform
         run: terraform init
 
