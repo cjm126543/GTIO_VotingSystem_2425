@@ -158,7 +158,7 @@ jobs:
             name: ecr-url
       - name: Leer URI
         run: |
-            valor=$(cat ecr_url.txt)
+            valor=$(cat TerraFormConfig/ECR/ecr_url.txt)
             echo "URI ECR: $valor"
         
       - name: Checkout repo
@@ -210,7 +210,7 @@ jobs:
             name: ecr-url
       - name: Leer URI
         run: |
-            $ECR_REPO=$(cat ecr_url.txt)
+            $ECR_REPO=$(cat TerraFormConfig/ECR/ecr_url.txt)
             echo "URI ECR: $valor"
     
       - name: Login en ECR
