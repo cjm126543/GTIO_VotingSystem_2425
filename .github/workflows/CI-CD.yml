@@ -135,6 +135,8 @@ jobs:
           valor=$(terraform output -raw ecr_repo_url)
           echo "valor: $valor"
           echo "ECR_REPO=$valor" >> $GITHUB_OUTPUT
+          echo "$(terraform output -raw ecr_repo_url)" > ecr_url.txt
+          
       - name: Subir archivo como artifact
         uses: actions/upload-artifact@v3
         with:
