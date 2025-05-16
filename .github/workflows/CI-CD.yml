@@ -138,7 +138,7 @@ jobs:
           echo "$(terraform output -raw ecr_repo_url)" > ecr_url.txt
           
       - name: Subir archivo como artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ecr-url
           path: ecr_url.txt
@@ -152,7 +152,7 @@ jobs:
   
     steps:
       - name: Descargar artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: ecr-url
       - name: Leer URI
@@ -204,7 +204,7 @@ jobs:
           aws configure list
           
       - name: Descargar artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: ecr-url
       - name: Leer URI
