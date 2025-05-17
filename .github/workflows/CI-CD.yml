@@ -145,7 +145,10 @@ jobs:
             ECR_REPO=$(cat ecr_url.txt)
             echo "URI ECR: $ECR_REPO"
             echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
-    
+            
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Login en ECR
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
