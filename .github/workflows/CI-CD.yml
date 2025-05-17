@@ -107,7 +107,13 @@ jobs:
   
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
-  
+
+      - name: Save backend image
+        run: docker save dockerconfig-back -o dockerconfig-back
+    
+      - name: Save frontend image
+        run: docker save dockerconfig-front -o dockerconfig-front
+        
       - name: Upload Docker images as artifact
         uses: actions/upload-artifact@v4
         with:
