@@ -92,6 +92,7 @@ jobs:
         run: |
             valor=$(cat ecr_url.txt)
             echo "URI ECR: $valor"
+            
         
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -120,7 +121,6 @@ jobs:
     needs: [create_ecr,build-images]
     runs-on: ubuntu-latest
     env:
-      ECR_REPO: ${{ needs.create_ecr.outputs.ecr_repo_url }}
       AWS_REGION: us-east-1
     steps:
       - name: Configurar credenciales AWS
@@ -129,7 +129,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
+          aws-region: $AWS_REGION
           
       - name: Verificar configuración de AWS
         run: |
@@ -144,6 +144,7 @@ jobs:
         run: |
             ECR_REPO=$(cat ecr_url.txt)
             echo "URI ECR: $ECR_REPO"
+            echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
     
       - name: Login en ECR
         run: |
