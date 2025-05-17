@@ -63,8 +63,10 @@ jobs:
           path: front_GTIO_VotingSystem/coverage/
 
   create_ecr:
+  
     name: Crear repositorio ECR con Terraform
     runs-on: ubuntu-latest
+    
     defaults:
       run:
         working-directory: TerraFormConfig/ECR
@@ -145,9 +147,6 @@ jobs:
         run: |
           docker compose -f compose.yaml build front back kong  # Construye las imágenes front y back
   
-      - name: List Docker images
-        run: docker images  # Muestra las imágenes disponibles en Docker para depuración
-        
       - name: Create images directory
         run: mkdir -p images
 
@@ -175,12 +174,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
-      - name: Verificar configuración de AWS
-        run: |
-          aws sts get-caller-identity
-          aws configure list
-          
+  
       - name: Descargar artifact
         uses: actions/download-artifact@v4
         with:
