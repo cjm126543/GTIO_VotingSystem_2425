@@ -122,13 +122,6 @@ jobs:
             dockerconfig-back
             dockerconfig-front
 
-  deploy:
-    name: Subir imágenes a ECR
-    needs: [create_ecr,build-images]
-    runs-on: ubuntu-latest
-    env:
-      AWS_REGION: us-east-1
-    steps:
       - name: Configurar credenciales AWS
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -146,13 +139,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ecr-url
-            
-      - name: Descargar artifact docker
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-images
-            
-                
+                  
       - name: Leer URI
         run: |
             ECR_REPO=$(cat ecr_url.txt)
@@ -164,6 +151,7 @@ jobs:
           echo "Contenido actual:"
           pwd
           ls -R   
+          
       - name: Checkout repo
         uses: actions/checkout@v4
 
