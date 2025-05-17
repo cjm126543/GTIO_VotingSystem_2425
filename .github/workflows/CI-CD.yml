@@ -108,13 +108,13 @@ jobs:
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
   
-      - name: Save backend image in BackEnd/BackEnd
-        run: |
-          docker save dockerconfig-back > BackEnd/BackEnd/DockerFile
-      
-      - name: Save frontend image in front_GTIO_VotingSystem
-        run: |
-          docker save dockerconfig-front > front_GTIO_VotingSystem/DockerFile
+      - name: Upload Docker images as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-images
+          path: |
+            dockerconfig-back
+            dockerconfig-front
 
   deploy:
     name: Subir imágenes a ECR
@@ -156,13 +156,13 @@ jobs:
       - name: Construir y subir imagen FRONT
         working-directory: front_GTIO_VotingSystem
         run: |
-          docker build -t front .
+          docker load -i front_GTIO_VotingSystem/dockerconfig-front
           docker tag dockerconfig-front:latest $ECR_REPO:front
           docker push $ECR_REPO:front
 
       - name: Construir y subir imagen BACK
         working-directory: BackEnd/BackEnd
         run: |
-          docker build -t back .
+          docker load -i BackEnd/BackEnd/dockerconfig-back
           docker tag dockerconfig-back:latest $ECR_REPO:back
           docker push $ECR_REPO:back
