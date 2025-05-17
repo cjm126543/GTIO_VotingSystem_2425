@@ -150,7 +150,6 @@ jobs:
      # github.event_name == 'push' && contains(github.event.head_commit.message, 'imagen')
   
     steps:
-     
       - name: Checkout repo
         uses: actions/checkout@v4
   
@@ -166,22 +165,17 @@ jobs:
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
   
       - name: Save backend image
-        run: docker save dockerconfig-back -o backend.tar
-        
-      - name: Upload backend image
-        uses: actions/upload-artifact@v4
-        with:
-          name: published-backend
-          path: backend.tar
+        run: docker save dockerconfig-back -o images/backend.tar
       
       - name: Save frontend image
-        run: docker save dockerconfig-front -o frontend.tar
-        
-      - name: Upload frontend image
+        run: docker save dockerconfig-front -o images/frontend.tar
+      
+      - name: Upload both images as a single artifact
         uses: actions/upload-artifact@v4
         with:
-          name: published-frontend
-          path: frontend.tar
+          name: published-images
+          path: images/
+          
   deploy:
     name: Subir imágenes a ECR
     needs: [create_ecr, run_backend_tests, run_frontend_tests, build-images]
@@ -214,23 +208,17 @@ jobs:
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REPO
           
-      - name: Descargar imágenes construidas
+      - name: Download built images
         uses: actions/download-artifact@v4
         with:
-          name: published-backend
-          path: ./backend-image
-  
-      - name: Descargar imagen frontend
-        uses: actions/download-artifact@v4
-        with:
-          name: published-frontend
-          path: ./frontend-image
-  
-      - name: Cargar imagen backend
-        run: docker load < ./backend-image/DockerFile
-  
-      - name: Cargar imagen frontend
-        run: docker load < ./frontend-image/DockerFile
+          name: published-images
+          path: ./images
+      
+      - name: Load backend image
+        run: docker load < ./images/backend.tar
+      
+      - name: Load frontend image
+        run: docker load < ./images/frontend.tar
 
       - name: Etiquetar y subir imagen backend
         run: |
