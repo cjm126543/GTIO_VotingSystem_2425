@@ -144,8 +144,7 @@ jobs:
           
       - name: Descargar artifact
         uses: actions/download-artifact@v4
-        with:
-            name: ecr-url
+        
       - name: Leer URI
         run: |
             ECR_REPO=$(cat ecr_url.txt)
