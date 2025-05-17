@@ -165,14 +165,23 @@ jobs:
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
   
-      - name: Save backend image in BackEnd/BackEnd
-        run: |
-          docker save dockerconfig-back > BackEnd/BackEnd/DockerFile
+      - name: Save backend image
+        run: docker save dockerconfig-back -o backend.tar
+        
+      - name: Upload backend image
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-backend
+          path: backend.tar
       
-      - name: Save frontend image in front_GTIO_VotingSystem
-        run: |
-          docker save dockerconfig-front > front_GTIO_VotingSystem/DockerFile
-
+      - name: Save frontend image
+        run: docker save dockerconfig-front -o frontend.tar
+        
+      - name: Upload frontend image
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-frontend
+          path: frontend.tar
   deploy:
     name: Subir imágenes a ECR
     needs: [create_ecr, run_backend_tests, run_frontend_tests, build-images]
@@ -204,17 +213,31 @@ jobs:
       - name: Login en ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REPO
+          
+      - name: Descargar imágenes construidas
+        uses: actions/download-artifact@v4
+        with:
+          name: published-backend
+          path: ./backend-image
+  
+      - name: Descargar imagen frontend
+        uses: actions/download-artifact@v4
+        with:
+          name: published-frontend
+          path: ./frontend-image
+  
+      - name: Cargar imagen backend
+        run: docker load < ./backend-image/DockerFile
+  
+      - name: Cargar imagen frontend
+        run: docker load < ./frontend-image/DockerFile
 
-      - name: Construir y subir imagen FRONT
-        working-directory: front_GTIO_VotingSystem
+      - name: Etiquetar y subir imagen backend
         run: |
-          docker build -t front .
-          docker tag dockerconfig-front:latest $ECR_REPO:front
-          docker push $ECR_REPO:front
+          docker tag dockerconfig-back:latest $ECR_REPO:backend
+          docker push $ECR_REPO:backend
 
-      - name: Construir y subir imagen BACK
-        working-directory: BackEnd/BackEnd
+      - name: Etiquetar y subir imagen frontend
         run: |
-          docker build -t back .
-          docker tag dockerconfig-back:latest $ECR_REPO:back
-          docker push $ECR_REPO:back
+          docker tag dockerconfig-front:latest $ECR_REPO:frontend
+          docker push $ECR_REPO:frontend
