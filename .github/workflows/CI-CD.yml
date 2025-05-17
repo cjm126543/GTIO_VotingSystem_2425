@@ -11,6 +11,7 @@ jobs:
   run_backend_tests:
     runs-on: ubuntu-latest
     steps:
+    
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -31,12 +32,6 @@ jobs:
 
       - name: Run tests with coverage (Backend)
         run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
-
-      - name: Upload test coverage report (Backend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report-backend
-          path: BackEnd/Test/TestResults/
 
   # Job para ejecutar pruebas del Frontend
   run_frontend_tests:
@@ -137,8 +132,6 @@ jobs:
     name: Build Docker Images (Front & Back)
     runs-on: ubuntu-latest
     needs: [run_backend_tests, run_frontend_tests,create_ecr]
-    #if: |
-     # github.event_name == 'push' && contains(github.event.head_commit.message, 'imagen')
   
     steps:
       - name: Checkout repo
