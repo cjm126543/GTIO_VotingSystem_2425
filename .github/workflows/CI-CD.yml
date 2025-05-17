@@ -142,7 +142,7 @@ jobs:
             name: ecr-url
       - name: Leer URI
         run: |
-            $ECR_REPO=$(cat ecr_url.txt)
+            ECR_REPO=$(cat ecr_url.txt)
             echo "URI ECR: $ECR_REPO"
     
       - name: Login en ECR
