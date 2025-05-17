@@ -38,15 +38,6 @@ jobs:
           name: coverage-report-backend
           path: BackEnd/Test/TestResults/
 
-      - name: Publish project (Backend)
-        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish-backend
-
-      - name: Upload build artifact (Backend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: published-backend
-          path: ./publish-backend
-
   # Job para ejecutar pruebas del Frontend
   run_frontend_tests:
     runs-on: ubuntu-latest
@@ -163,7 +154,10 @@ jobs:
   
       - name: List Docker images
         run: docker images  # Muestra las imágenes disponibles en Docker para depuración
-  
+        
+      - name: Create images directory
+        run: mkdir -p images
+
       - name: Save backend image
         run: docker save dockerconfig-back -o images/backend.tar
       
