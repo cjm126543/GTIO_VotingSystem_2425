@@ -1,5 +1,4 @@
 name: Deploy Net and Security Module
-
 on:
   push:
     branches:
