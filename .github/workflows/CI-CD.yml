@@ -169,13 +169,13 @@ jobs:
       - name: Construir y subir imagen FRONT
         working-directory: front_GTIO_VotingSystem
         run: |
-          docker load -i dockerconfig-front
+          docker load -i docker-images/dockerconfig-front
           docker tag dockerconfig-front:latest $ECR_REPO:front
           docker push $ECR_REPO:front
 
       - name: Construir y subir imagen BACK
         working-directory: BackEnd/BackEnd
         run: |
-          docker load -i dockerconfig-back
+          docker load -i docker-images/dockerconfig-back
           docker tag dockerconfig-back:latest $ECR_REPO:back
           docker push $ECR_REPO:back
