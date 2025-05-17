@@ -203,8 +203,8 @@ jobs:
 
       - name: Delete existing ECR images (frontend and backend)
         run: |
-          aws ecr batch-delete-image --repository-name $ECR_REPO --image-ids imageTag=front || true
-          aws ecr batch-delete-image --repository-name $ECR_REPO --image-ids imageTag=back || true
+          aws ecr batch-delete-image --repository-name carlos/repo --image-ids imageTag=front || true
+          aws ecr batch-delete-image --repository-name carlos/repo --image-ids imageTag=back || true
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
