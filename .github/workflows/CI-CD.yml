@@ -142,13 +142,17 @@ jobs:
           aws sts get-caller-identity
           aws configure list
           
-      - name: Descargar artifact
+      - name: Descargar artifact url
         uses: actions/download-artifact@v4
         with:
-          name: |
-            ecr-url
-            docker-images
-        
+          name: ecr-url
+            
+      - name: Descargar artifact docker
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-images
+            
+                
       - name: Leer URI
         run: |
             ECR_REPO=$(cat ecr_url.txt)
