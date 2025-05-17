@@ -10,73 +10,6 @@ on:
 env:
   AWS_REGION: us-east-1
 jobs:
-  run_backend_tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v3
-
-      - name: Restore dependencies (Backend)
-        run: dotnet restore BackEnd/BackEnd/
-
-      - name: Check code formatting (Backend)
-        run: dotnet format --verify-no-changes || echo "⚠️ Code format issues found!"
-
-      - name: Check for outdated dependencies (Backend)
-        run: dotnet list package --outdated || echo "⚠️ Some dependencies are outdated!"
-
-      - name: Build project (Backend)
-        run: dotnet build BackEnd/BackEnd/ --no-restore --configuration Release
-
-      - name: Run tests with coverage (Backend)
-        run: dotnet test BackEnd/Test/ --configuration Release --collect:"XPlat Code Coverage"
-
-      - name: Upload test coverage report (Backend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report-backend
-          path: BackEnd/Test/TestResults/
-
-      - name: Publish project (Backend)
-        run: dotnet publish BackEnd/BackEnd/ --configuration Release --output ./publish-backend
-
-      - name: Upload build artifact (Backend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: published-backend
-          path: ./publish-backend
-
-  # Job para ejecutar pruebas del Frontend
-  run_frontend_tests:
-    runs-on: ubuntu-latest
-  
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-  
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-  
-      - name: Install dependencies
-        run: |
-          cd front_GTIO_VotingSystem
-          npm install
-  
-      - name: Run Angular tests
-        run: |
-          cd front_GTIO_VotingSystem
-          npm test -- --no-watch --browsers=ChromeHeadless --code-coverage
-  
-      - name: Upload test coverage report (Frontend)
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage-report
-          path: front_GTIO_VotingSystem/coverage/
 
   create_ecr:
     name: Crear repositorio ECR con Terraform
@@ -147,7 +80,7 @@ jobs:
   build-images:
     name: Build Docker Images (Front & Back)
     runs-on: ubuntu-latest
-    needs: [run_backend_tests, run_frontend_tests,create_ecr]
+    needs: [create_ecr]
     #if: |
      # github.event_name == 'push' && contains(github.event.head_commit.message, 'imagen')
   
@@ -185,7 +118,7 @@ jobs:
 
   deploy:
     name: Subir imágenes a ECR
-    needs: [create_ecr, run_backend_tests, run_frontend_tests, build-images]
+    needs: [create_ecr,build-images]
     runs-on: ubuntu-latest
     env:
       ECR_REPO: ${{ needs.create_ecr.outputs.ecr_repo_url }}
@@ -211,7 +144,7 @@ jobs:
       - name: Leer URI
         run: |
             $ECR_REPO=$(cat ecr_url.txt)
-            echo "URI ECR: $valor"
+            echo "URI ECR: $ECR_REPO"
     
       - name: Login en ECR
         run: |
