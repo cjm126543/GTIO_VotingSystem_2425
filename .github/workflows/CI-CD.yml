@@ -159,6 +159,11 @@ jobs:
             echo "URI ECR: $ECR_REPO"
             echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
             
+      - name: Verificar archivos descargados
+        run: |
+          echo "Contenido actual:"
+          pwd
+          ls -R   
       - name: Checkout repo
         uses: actions/checkout@v4
 
