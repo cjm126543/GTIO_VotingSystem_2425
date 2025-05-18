@@ -7,3 +7,4 @@ variable "aws_subnets_ids" {}
 variable "tag_name" {}
 variable "capacity_provider_name" {}
 variable "security_group_id" {}
+variable "machine_instance_type" {}

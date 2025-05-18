@@ -50,29 +50,34 @@ variable "kong_image" {
 }
 
 module "task_front" {
-  source                    = "./modules"
+  source                    = "./modules/common"
   task_family_name          = "front-task"
   container_definition_name = "front-container"
-  container_image_uri       = var.front_image
-  container_ports           = [4200, 4200]
-  awslogs_group             = "/ecs"
+  // this needs to be retrieved from CD
+  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:front-latest"
+  container_ports     = [4200, 4200]
+  awslogs_group       = "/ecs"
+  labrole_arn         = data.aws_iam_role.labrole.arn
 }
 
 module "task_back" {
-  source                    = "./modules"
+  source                    = "./modules/common"
   task_family_name          = "back-task"
   container_definition_name = "back-container"
-  container_image_uri       = var.back_image
-  container_ports           = [8080, 8080]
-  awslogs_group             = "/ecs"
+  // this needs to be retrieved from CD
+  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:back-latest"
+  container_ports     = [8080, 8080]
+  awslogs_group       = "/ecs"
+  labrole_arn         = data.aws_iam_role.labrole.arn
 }
 
 module "task_kong" {
-  source                    = "./modules"
+  source                    = "./modules/kong"
   task_family_name          = "kong-task"
   container_definition_name = "kong-container"
-  container_image_uri       = var.kong_image
-  container_ports           = [8000, 8000]
-  awslogs_group             = "/ecs"
+  // this needs to be retrieved from CD
+  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:kong-latest"
+  container_ports     = [8000, 8000]
+  awslogs_group       = "/ecs"
+  labrole_arn         = data.aws_iam_role.labrole.arn
 }
-

@@ -13,7 +13,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 resource "aws_launch_template" "ecs_instance_template" {
   name_prefix   = var.ecs_prefix
   image_id      = var.aws_ami_id
-  instance_type = "t2.micro"
+  instance_type = var.machine_instance_type
   key_name      = "vockey" # debe existir este par de claves en tu cuenta
   iam_instance_profile {
     name = "LabInstanceProfile" # debe existir o lo creas por separado

@@ -38,3 +38,13 @@ resource "aws_security_group_rule" "kong_in_rule" {
   security_group_id = data.aws_security_group.default_sec_grp.id
   description       = "kong in rule"
 }
+
+resource "aws_security_group_rule" "kongdb_in_rule" {
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = data.aws_security_group.default_sec_grp.id
+  description       = "kongdb in rule"
+}
