@@ -1,3 +1,9 @@
+
+// Locate default VPC and security group
+data "aws_vpc" "default_vpc" {
+  default = true
+}
+
 resource "aws_security_group" "default_sec_grp" {
   name        = "default-sec-group"
   description = "Security group with ingress rules for SQL, frontend, backend, and Kong"
