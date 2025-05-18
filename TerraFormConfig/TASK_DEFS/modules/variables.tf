@@ -5,3 +5,4 @@ variable "container_ports" {
   type = list(number)
 }
 variable "awslogs_group" {}
+variable "labrole_arn" {}

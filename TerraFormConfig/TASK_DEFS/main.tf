@@ -31,6 +31,11 @@ data "aws_subnets" "default_subnets" {
   }
 }
 
+// Locate labrole arn
+data "aws_iam_role" "labrole" {
+  name = "LabRole"
+}
+
 // Instance variables for needed task definitions
 module "task_front" {
   source                    = "./modules"
@@ -40,6 +45,7 @@ module "task_front" {
   container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:front-latest"
   container_ports     = [4200, 4200]
   awslogs_group       = "/ecs"
+  labrole_arn = data.aws_iam_role.labrole.arn
 }
 
 module "task_back" {
@@ -50,6 +56,7 @@ module "task_back" {
   container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:back-latest"
   container_ports     = [8080, 8080]
   awslogs_group       = "/ecs"
+  labrole_arn = data.aws_iam_role.labrole.arn
 }
 
 module "task_kong" {
@@ -60,4 +67,5 @@ module "task_kong" {
   container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:kong-latest"
   container_ports     = [8000, 8000]
   awslogs_group       = "/ecs"
+  labrole_arn = data.aws_iam_role.labrole.arn
 }
