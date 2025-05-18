@@ -536,7 +536,7 @@ jobs:
             CP_NAME="${SHORT}-capacity-provider"
             CP_EXISTS=$(aws ecs describe-capacity-providers --capacity-providers "$CP_NAME" --query 'capacityProviders[0].name' --output text 2>/dev/null || true)
             if [[ "$CP_EXISTS" == "$CP_NAME" ]]; then
-              terraform import "${MODULE}.aws_ecs_capacity_provider.ecs_cp" "$CP_NAME" || true
+              terraform import "${MODULE}.aws_ecs_capacity_provider.custom_cp" "$CP_NAME" || true
             fi
           done
 
