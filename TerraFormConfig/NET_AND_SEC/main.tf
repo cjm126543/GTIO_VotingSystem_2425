@@ -18,7 +18,3 @@ provider "aws" {
 data "aws_vpc" "default_vpc" {
   default = true
 }
-
-data "aws_security_group" "default_sec_grp" {
-  name = "default"
-}
