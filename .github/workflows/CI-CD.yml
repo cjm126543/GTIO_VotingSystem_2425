@@ -487,47 +487,41 @@ jobs:
         run: terraform apply -auto-approve tfplan
         
   deploy_task_def:
-    name: Desplegar definicines de las tareas
-    needs: [upload_images,deploy_ecs]
+    name: Desplegar definiciones de las tareas
+    needs: [upload_images, deploy_ecs]
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: TerraFormConfig/TASK_DEFS
-
+  
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+  
       - name: Download image-vars artifact
         uses: actions/download-artifact@v4
         with:
           name: image-vars
-          path: ./images.tfvars
-            
-      - name: Show contents of tfvars (optional)
-        run: cat ./images.tfvars
-        
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
+          path: TerraFormConfig/TASK_DEFS     
+  
+      - name: Show contents of tfvars (opcional)
+        run: cat TerraFormConfig/TASK_DEFS/images.tfvars
+  
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
+  
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.5
-
+  
       - name: Terraform Init
+        working-directory: TerraFormConfig/TASK_DEFS
         run: terraform init
-    
+  
       - name: Terraform Validate
+        working-directory: TerraFormConfig/TASK_DEFS
         run: terraform validate
   
       - name: Terraform Plan
-        run: terraform plan -var-file=./images.tfvars -out=tfplan
-      
+        working-directory: TerraFormConfig/TASK_DEFS
+        run: terraform plan -var-file=images.tfvars -out=tfplan
+  
       - name: Terraform Apply
+        working-directory: TerraFormConfig/TASK_DEFS
         run: terraform apply -auto-approve tfplan
