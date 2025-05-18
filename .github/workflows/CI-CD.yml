@@ -245,8 +245,12 @@ jobs:
           uses: hashicorp/setup-terraform@v3
           with:
             terraform_version: 1.6.5
+            
         - name: Terraform Init
           run: terraform init
+
+        - name: Terraform Refresh (sincroniza estado remoto con local)
+          run: terraform refresh
 
         - name: Remove duplicate SG rules from Terraform state (if exist)
           run: |
