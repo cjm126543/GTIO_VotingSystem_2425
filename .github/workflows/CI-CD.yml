@@ -327,23 +327,46 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
-      - name: Delete existing target groups if they exist
-        run: |
-          TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
-          for tg_name in "${TG_NAMES[@]}"; do
-            TG_ARN=$(aws elbv2 describe-target-groups --names "$tg_name" --query "TargetGroups[0].TargetGroupArn" --output text 2>/dev/null || true)
-            if [ "$TG_ARN" != "None" ] && [ -n "$TG_ARN" ]; then
-              echo "Deleting target group: $tg_name"
-              aws elbv2 delete-target-group --target-group-arn "$TG_ARN"
-            else
-              echo "Target group $tg_name does not exist"
-            fi
-          done
+          
+      - name: Delete Target Groups safely
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESIN_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
+      
+          for TG_NAME in "${TG_NAMES[@]}"; do
+            echo "Processing target group: $TG_NAME"
+      
+            TG_ARN=$(aws elbv2 describe-target-groups --names $TG_NAME --query "TargetGroups[0].TargetGroupArn" --output text || echo "None")
+            if [ "$TG_ARN" == "None" ]; then
+              echo "Target Group $TG_NAME not found, skipping..."
+              continue
+            fi
+      
+            echo "Target Group ARN: $TG_ARN"
+      
+            # Delete listeners using the TG as default action
+            LISTENERS=$(aws elbv2 describe-listeners --query "Listeners[?DefaultActions[?TargetGroupArn=='$TG_ARN']].ListenerArn" --output text)
+            for LISTENER_ARN in $LISTENERS; do
+              echo "Deleting listener $LISTENER_ARN that uses target group $TG_NAME"
+              aws elbv2 delete-listener --listener-arn $LISTENER_ARN
+            done
+      
+            # Delete rules pointing to the TG
+            RULES=$(aws elbv2 describe-rules --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text)
+            for RULE_ARN in $RULES; do
+              echo "Deleting rule $RULE_ARN that uses target group $TG_NAME"
+              aws elbv2 delete-rule --rule-arn $RULE_ARN
+            done
+      
+            sleep 5
+      
+            echo "Deleting target group $TG_NAME"
+            aws elbv2 delete-target-group --target-group-arn $TG_ARN
+          done
       
       - name: Terraform Init
         run: terraform init
