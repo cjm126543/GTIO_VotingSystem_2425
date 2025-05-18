@@ -222,9 +222,47 @@ jobs:
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
 
+  destroy_previous_infra:
+    name: Destruir infraestructuras anteriores de red, target group y ALB
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.5
+
+      - name: Destroy NET_AND_SEC infra
+        working-directory: TerraFormConfig/NET_AND_SEC
+        run: |
+          terraform init
+          terraform destroy -auto-approve
+
+      - name: Destroy TARGET_GRP infra
+        working-directory: TerraFormConfig/TARGET_GRP
+        run: |
+          terraform init
+          terraform destroy -auto-approve
+
+      - name: Destroy ALB infra
+        working-directory: TerraFormConfig/ALB
+        run: |
+          terraform init
+          terraform destroy -auto-approve
+
   deploy_net_and_sec:
     name: Subir las configuraciones de red y seguridad a AWS
-    #needs: upload_images
+    needs: destroy_previous_infra
     runs-on: ubuntu-latest
     defaults:
         run:
@@ -245,55 +283,10 @@ jobs:
           uses: hashicorp/setup-terraform@v3
           with:
             terraform_version: 1.6.5
-            
+  
         - name: Terraform Init
           run: terraform init
-
-        - name: Remove all existing security group rules
-          run: |
-            sudo apt-get update && sudo apt-get install -y jq
-            SG_ID="sg-0c84b5b0410e6f1b6"
-        
-            INGRESS_RULES=$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissions" --output json)
-        
-            echo "$INGRESS_RULES" | jq -c '.[]' | while read rule; do
-              PROTOCOL=$(echo $rule | jq -r '.IpProtocol')
-              FROM_PORT=$(echo $rule | jq -r '.FromPort // empty')
-              
-              echo $rule | jq -c '.IpRanges[]?' | while read cidr; do
-                CIDR=$(echo $cidr | jq -r '.CidrIp')
-                aws ec2 revoke-security-group-ingress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --cidr $CIDR || true
-              done
-              echo $rule | jq -c '.Ipv6Ranges[]?' | while read cidr6; do
-                CIDR6=$(echo $cidr6 | jq -r '.CidrIpv6')
-                aws ec2 revoke-security-group-ingress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --cidr $CIDR6 || true
-              done
-              echo $rule | jq -c '.UserIdGroupPairs[]?' | while read group_pair; do
-                SRC_GROUP_ID=$(echo $group_pair | jq -r '.GroupId')
-                aws ec2 revoke-security-group-ingress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --source-group $SRC_GROUP_ID || true
-              done
-            done
-        
-            EGRESS_RULES=$(aws ec2 describe-security-groups --group-ids $SG_ID --query "SecurityGroups[0].IpPermissionsEgress" --output json)
-        
-            echo "$EGRESS_RULES" | jq -c '.[]' | while read rule; do
-              PROTOCOL=$(echo $rule | jq -r '.IpProtocol')
-              FROM_PORT=$(echo $rule | jq -r '.FromPort // empty')
-              
-              echo $rule | jq -c '.IpRanges[]?' | while read cidr; do
-                CIDR=$(echo $cidr | jq -r '.CidrIp')
-                aws ec2 revoke-security-group-egress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --cidr $CIDR || true
-              done
-              echo $rule | jq -c '.Ipv6Ranges[]?' | while read cidr6; do
-                CIDR6=$(echo $cidr6 | jq -r '.CidrIpv6')
-                aws ec2 revoke-security-group-egress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --cidr $CIDR6 || true
-              done
-              echo $rule | jq -c '.UserIdGroupPairs[]?' | while read group_pair; do
-                SRC_GROUP_ID=$(echo $group_pair | jq -r '.GroupId')
-                aws ec2 revoke-security-group-egress --group-id $SG_ID --protocol $PROTOCOL --port $FROM_PORT --source-group $SRC_GROUP_ID || true
-              done
-            done
-        
+  
         - name: Terraform Validate
           run: terraform validate
   
@@ -327,68 +320,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
-          
-      - name: Delete Target Groups safely
-        shell: bash
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
-      
-          # Obtener los Load Balancers
-          LB_ARNS=$(aws elbv2 describe-load-balancers --query "LoadBalancers[].LoadBalancerArn" --output text)
-      
-          for TG_NAME in "${TG_NAMES[@]}"; do
-            echo "Processing target group: $TG_NAME"
-      
-            TG_ARN=$(aws elbv2 describe-target-groups --names $TG_NAME --query "TargetGroups[0].TargetGroupArn" --output text || echo "None")
-            if [ "$TG_ARN" == "None" ]; then
-              echo "Target Group $TG_NAME not found, skipping..."
-              continue
-            fi
-      
-            echo "Target Group ARN: $TG_ARN"
-      
-            for LB_ARN in $LB_ARNS; do
-              echo "Checking listeners in Load Balancer: $LB_ARN"
-      
-              LISTENER_ARNS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[].ListenerArn" --output text)
-      
-              for LISTENER_ARN in $LISTENER_ARNS; do
-                echo "Checking listener: $LISTENER_ARN"
-      
-                # Reglas asociadas al target group
-                RULE_ARNS=$(aws elbv2 describe-rules --listener-arn $LISTENER_ARN \
-                  --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text || true)
-      
-                # Listener usa el TG como acción por defecto
-                IS_DEFAULT=$(aws elbv2 describe-listeners --listener-arns $LISTENER_ARN \
-                  --query "Listeners[0].DefaultActions[?TargetGroupArn=='$TG_ARN']" --output text || true)
-      
-                # Eliminar reglas si las hay
-                for RULE_ARN in $RULE_ARNS; do
-                  echo "Deleting rule $RULE_ARN (uses $TG_NAME)"
-                  aws elbv2 delete-rule --rule-arn $RULE_ARN
-                done
-      
-                # Eliminar listener si usaba el TG como acción por defecto
-                if [ -n "$IS_DEFAULT" ]; then
-                  echo "Deleting listener $LISTENER_ARN (uses $TG_NAME as default)"
-                  aws elbv2 delete-listener --listener-arn $LISTENER_ARN
-                fi
-              done
-            done
-      
-            echo "Waiting a few seconds before deleting the Target Group..."
-            sleep 5
-      
-            echo "Deleting target group $TG_NAME"
-            aws elbv2 delete-target-group --target-group-arn $TG_ARN
-          done
-
 
       - name: Terraform Init
         run: terraform init
@@ -404,7 +335,7 @@ jobs:
         
   deploy_alb:
     name: Subir los balanceadores de carga a AWS
-    #needs: deploy_target_group
+    needs: deploy_target_group
     runs-on: ubuntu-latest
     defaults:
       run:
