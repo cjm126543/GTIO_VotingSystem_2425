@@ -221,14 +221,17 @@ jobs:
         run: |
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
-
-  destroy_previous_infra:
-    name: Destruir infraestructuras anteriores de red, target group y ALB
+          
+  deploy_net_and_sec:
+    name: Subir las configuraciones de red y seguridad a AWS
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TerraFormConfig/NET_AND_SEC
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
-
+  
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -236,66 +239,66 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform
+  
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
-
-      - name: Destroy NET_AND_SEC infra
-        working-directory: TerraFormConfig/NET_AND_SEC
+  
+      - name: Terraform Init
+        run: terraform init
+  
+      - name: Obtener ID del Security Group por nombre
+        id: sg_id
         run: |
-          terraform init
-          terraform destroy -auto-approve
-
-      - name: Destroy TARGET_GRP infra
-        working-directory: TerraFormConfig/TARGET_GRP
+          SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=default --query "SecurityGroups[0].GroupId" --output text)
+          echo "sg_id=$SG_ID" >> $GITHUB_OUTPUT
+  
+      - name: Importar regla SQL por descripción
         run: |
-          terraform init
-          terraform destroy -auto-approve
-
-      - name: Destroy ALB infra
-        working-directory: TerraFormConfig/ALB
+          RULE_ID=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
+            --query "SecurityGroupRules[?Description=='SQL Server in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+            --output text)
+          echo "Importando regla SQL con ID: $RULE_ID"
+          terraform import aws_security_group_rule.sql_in_rule $RULE_ID || true
+  
+      - name: Importar regla Frontend por descripción
         run: |
-          terraform init
-          terraform destroy -auto-approve
+          RULE_ID=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
+            --query "SecurityGroupRules[?Description=='Frontend in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+            --output text)
+          echo "Importando regla Frontend con ID: $RULE_ID"
+          terraform import aws_security_group_rule.front_in_rule $RULE_ID || true
+  
+      - name: Importar regla Backend por descripción
+        run: |
+          RULE_ID=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
+            --query "SecurityGroupRules[?Description=='backend in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+            --output text)
+          echo "Importando regla Backend con ID: $RULE_ID"
+          terraform import aws_security_group_rule.back_in_rule $RULE_ID || true
+  
+      - name: Importar regla Kong por descripción
+        run: |
+          RULE_ID=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
+            --query "SecurityGroupRules[?Description=='kong in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+            --output text)
+          echo "Importando regla Kong con ID: $RULE_ID"
+          terraform import aws_security_group_rule.kong_in_rule $RULE_ID || true
+  
+      - name: Terraform Validate
+        run: terraform validate
+  
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+  
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
 
-  deploy_net_and_sec:
-    name: Subir las configuraciones de red y seguridad a AWS
-    needs: destroy_previous_infra
-    runs-on: ubuntu-latest
-    defaults:
-        run:
-          working-directory: TerraFormConfig/NET_AND_SEC
-    steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-  
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v2
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-            aws-region: ${{ secrets.AWS_REGION }}
-  
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v3
-          with:
-            terraform_version: 1.6.5
-  
-        - name: Terraform Init
-          run: terraform init
-  
-        - name: Terraform Validate
-          run: terraform validate
-  
-        - name: Terraform Plan
-          run: terraform plan -out=tfplan
-  
-        - name: Terraform Apply
-          run: terraform apply -auto-approve tfplan
-          
   deploy_target_group:
     name: Subir los Target Group a AWS
     needs: deploy_net_and_sec
