@@ -222,6 +222,13 @@ jobs:
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
           
+      - name: Set output variables with image URIs
+        id: set-image-uris
+        run: |
+          echo "front_image=${ECR_REPO}:frontend" >> $GITHUB_OUTPUT
+          echo "back_image=${ECR_REPO}:backend" >> $GITHUB_OUTPUT
+          echo "kong_image=${ECR_REPO}:kong" >> $GITHUB_OUTPUT
+          
   deploy_net_and_sec:
     name: Subir las configuraciones de red y seguridad a AWS
     runs-on: ubuntu-latest
@@ -522,40 +529,44 @@ jobs:
   
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-  deploy_ecs_services:
-    name: Desplegar servicios ecs
+        
+  deploy_task_def:
+    name: Desplegar definicines de las tareas
+    needs: upload_images
     runs-on: ubuntu-latest
-    needs: deploy_ecs
     defaults:
       run:
-        working-directory: TerraFormConfig/ECS_SERVICE   
-  
+        working-directory: TerraFormConfig/TASK_DEFS
+
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
-  
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region:            ${{ secrets.AWS_REGION }}
-  
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
-  
+
       - name: Terraform Init
         run: terraform init
-
     
       - name: Terraform Validate
         run: terraform validate
   
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-  
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        
+      - name: Terraform Apply with image URIs
+        run: terraform apply -auto-approve \
+          -var "front_image=${{ needs.upload_images.outputs.front_image }}" \
+          -var "back_image=${{ needs.upload_images.outputs.back_image }}" \
+          -var "kong_image=${{ needs.upload_images.outputs.kong_image }}"
+
