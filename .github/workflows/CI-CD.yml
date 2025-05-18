@@ -510,7 +510,9 @@ jobs:
           terraform import module.ecs_cluster_front.aws_autoscaling_group.ecs_asg ecs-asg-front || true
           terraform import module.ecs_cluster_back.aws_autoscaling_group.ecs_asg ecs-asg-back || true
           terraform import module.ecs_cluster_kong.aws_autoscaling_group.ecs_asg ecs-asg-kong || true
-
+          terraform import module.ecs_cluster_front.aws_ecs_capacity_provider.custom_cp front-capacity-provider || true
+          terraform import module.ecs_cluster_back.aws_ecs_capacity_provider.custom_cp back-capacity-provider || true
+          terraform import module.ecs_cluster_kong.aws_ecs_capacity_provider.custom_cp kong-capacity-provider || true
 
       - name: Terraform Validate
         run: terraform validate
