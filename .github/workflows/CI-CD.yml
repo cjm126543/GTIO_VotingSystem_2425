@@ -337,6 +337,9 @@ jobs:
         run: |
           TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
       
+          # Obtener todos los Load Balancer ARNs
+          LB_ARNS=$(aws elbv2 describe-load-balancers --query "LoadBalancers[].LoadBalancerArn" --output text)
+      
           for TG_NAME in "${TG_NAMES[@]}"; do
             echo "Processing target group: $TG_NAME"
       
@@ -348,18 +351,28 @@ jobs:
       
             echo "Target Group ARN: $TG_ARN"
       
-            # Delete listeners using the TG as default action
-            LISTENERS=$(aws elbv2 describe-listeners --query "Listeners[?DefaultActions[?TargetGroupArn=='$TG_ARN']].ListenerArn" --output text)
-            for LISTENER_ARN in $LISTENERS; do
-              echo "Deleting listener $LISTENER_ARN that uses target group $TG_NAME"
-              aws elbv2 delete-listener --listener-arn $LISTENER_ARN
-            done
+            # Recorremos todos los Load Balancers para ver si algún listener usa este TG
+            for LB_ARN in $LB_ARNS; do
+              echo "Checking listeners in Load Balancer: $LB_ARN"
       
-            # Delete rules pointing to the TG
-            RULES=$(aws elbv2 describe-rules --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text)
-            for RULE_ARN in $RULES; do
-              echo "Deleting rule $RULE_ARN that uses target group $TG_NAME"
-              aws elbv2 delete-rule --rule-arn $RULE_ARN
+              LISTENERS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[].ListenerArn" --output text)
+      
+              for LISTENER_ARN in $LISTENERS; do
+                echo "Checking listener: $LISTENER_ARN"
+      
+                DEFAULT_TG=$(aws elbv2 describe-listeners --listener-arns $LISTENER_ARN --query "Listeners[0].DefaultActions[?TargetGroupArn=='$TG_ARN']" --output text)
+      
+                if [ -n "$DEFAULT_TG" ]; then
+                  echo "Deleting listener $LISTENER_ARN (uses $TG_NAME as default)"
+                  aws elbv2 delete-listener --listener-arn $LISTENER_ARN
+                fi
+      
+                RULES=$(aws elbv2 describe-rules --listener-arn $LISTENER_ARN --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text)
+                for RULE_ARN in $RULES; do
+                  echo "Deleting rule $RULE_ARN (uses $TG_NAME)"
+                  aws elbv2 delete-rule --rule-arn $RULE_ARN
+                done
+              done
             done
       
             sleep 5
@@ -367,7 +380,7 @@ jobs:
             echo "Deleting target group $TG_NAME"
             aws elbv2 delete-target-group --target-group-arn $TG_ARN
           done
-      
+
       - name: Terraform Init
         run: terraform init
 
