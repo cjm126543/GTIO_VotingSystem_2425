@@ -502,7 +502,7 @@ jobs:
           path: ./images.tfvars
             
       - name: Show contents of tfvars (optional)
-        run: cat images.tfvars
+        run: cat ./images.tfvars
         
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -527,7 +527,7 @@ jobs:
         run: terraform validate
   
       - name: Terraform Plan
-        run: terraform plan -var-file=images.tfvars -out=tfplan
+        run: terraform plan -var-file=./images.tfvars -out=tfplan
       
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
