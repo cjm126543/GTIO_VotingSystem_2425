@@ -516,12 +516,6 @@ jobs:
       
           for CLUSTER in "${!PREFIXES[@]}"; do
             SHORT="${PREFIXES[$CLUSTER]}"
-            MODULE="module.ecs_cluster_${SHORT}"
-      
-            CLUSTER_ARN=$(aws ecs describe-clusters --clusters "$CLUSTER" --query 'clusters[0].clusterArn' --output text 2>/dev/null || true)
-            if [[ -n "$CLUSTER_ARN" && "$CLUSTER_ARN" != "None" ]]; then
-              terraform import "${MODULE}.aws_ecs_cluster.ecs_cluster" "$CLUSTER_ARN" || true
-            fi
       
             LT_NAME="ecs-launch-template-${SHORT}"
             LT_ID=$(aws ec2 describe-launch-templates --launch-template-names "$LT_NAME" --query 'LaunchTemplates[0].LaunchTemplateId' --output text 2>/dev/null || true)
