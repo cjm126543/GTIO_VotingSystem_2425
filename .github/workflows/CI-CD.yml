@@ -516,6 +516,35 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
             terraform_version: 1.6.5
+            
+      - name: Get LabRole ARN
+        id: labrole
+        shell: bash
+        run: |
+          ROLE_NAME="LabRole"      # <-- cámbialo si tu role tiene otro nombre
+      
+          LABROLE_ARN=$(aws iam get-role \
+              --role-name "${ROLE_NAME}" \
+              --query 'Role.Arn' \
+              --output text 2>/dev/null || true)
+      
+          if [[ -z "${LABROLE_ARN}" || "${LABROLE_ARN}" == "None" ]]; then
+            echo "ERROR: El role '${ROLE_NAME}' no existe o no es accesible."
+            exit 1
+          fi
+      
+          echo "labrole_arn=${LABROLE_ARN}" >> "$GITHUB_OUTPUT"
+      
+      - name: Generate labrole.auto.tfvars
+        shell: bash
+        working-directory: TerraFormConfig/TASK_DEFS
+        run: |
+          cat > labrole.auto.tfvars <<EOF
+          labrole_arn = "${{ steps.labrole.outputs.labrole_arn }}"
+          EOF
+      
+          echo "labrole.auto.tfvars creado con:"
+          cat labrole.auto.tfvars
           
       - name: Terraform Init
         working-directory: TerraFormConfig/TASK_DEFS
