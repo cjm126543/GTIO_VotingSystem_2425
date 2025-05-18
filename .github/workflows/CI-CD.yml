@@ -8,12 +8,12 @@ on:
     branches:
       - productive
 jobs:
- deploy_target_group:
-    name: Deploy Target Group with Terraform
+ deploy_alb:
+    name: Deploy ALB with Terraform
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: TerraFormConfig/TARGET_GRP
+        working-directory: TerraFormConfig/ALB
 
     steps:
       - name: Checkout code
