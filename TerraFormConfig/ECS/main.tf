@@ -23,17 +23,6 @@ data "aws_security_group" "default_sec_grp" {
   name = "default"
 }
 
-// Search amazon 2023 ami image
-data "aws_ami" "amazon_linux_2023" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["al2023-ami-*-x86_64"]
-  }
-}
-
 // Default subnets
 data "aws_subnets" "default_subnets" {
   filter {
@@ -44,31 +33,37 @@ data "aws_subnets" "default_subnets" {
 
 // Instance variables for needed ECS cluster instances
 module "ecs_cluster_front" {
-  source          = "./modules"
-  cluster_name    = "FrontCluster"
-  ecs_prefix      = "ecs-launch-template-front"
-  aws_ami_id      = data.aws_ami.amazon_linux_2023.id
-  asg_name        = "ecs-asg-front"
-  aws_subnets_ids = data.aws_subnets.default_subnets.ids
-  tag_name        = "ecs-instance-front"
+  source                 = "./modules"
+  cluster_name           = "FrontCluster"
+  ecs_prefix             = "ecs-launch-template-front"
+  aws_ami_id             = "ami-05712a2b73d4ebafb"
+  asg_name               = "ecs-asg-front"
+  aws_subnets_ids        = data.aws_subnets.default_subnets.ids
+  tag_name               = "ecs-instance-front"
+  capacity_provider_name = "front-capacity-provider"
+  security_group_id      = data.aws_security_group.default_sec_grp.id
 }
 
 module "ecs_cluster_back" {
-  source          = "./modules"
-  cluster_name    = "BackCluster"
-  ecs_prefix      = "ecs-launch-template-back"
-  aws_ami_id      = data.aws_ami.amazon_linux_2023.id
-  asg_name        = "ecs-asg-back"
-  aws_subnets_ids = data.aws_subnets.default_subnets.ids
-  tag_name        = "ecs-instance-back"
+  source                 = "./modules"
+  cluster_name           = "BackCluster"
+  ecs_prefix             = "ecs-launch-template-back"
+  aws_ami_id             = "ami-05712a2b73d4ebafb"
+  asg_name               = "ecs-asg-back"
+  aws_subnets_ids        = data.aws_subnets.default_subnets.ids
+  tag_name               = "ecs-instance-back"
+  capacity_provider_name = "back-capacity-provider"
+  security_group_id      = data.aws_security_group.default_sec_grp.id
 }
 
 module "ecs_cluster_kong" {
-  source          = "./modules"
-  cluster_name    = "KongCluster"
-  ecs_prefix      = "ecs-launch-template-kong"
-  aws_ami_id      = data.aws_ami.amazon_linux_2023.id
-  asg_name        = "ecs-asg-kong"
-  aws_subnets_ids = data.aws_subnets.default_subnets.ids
-  tag_name        = "ecs-instance-kong"
+  source                 = "./modules"
+  cluster_name           = "KongCluster"
+  ecs_prefix             = "ecs-launch-template-kong"
+  aws_ami_id             = "ami-05712a2b73d4ebafb"
+  asg_name               = "ecs-asg-kong"
+  aws_subnets_ids        = data.aws_subnets.default_subnets.ids
+  tag_name               = "ecs-instance-kong"
+  capacity_provider_name = "kong-capacity-provider"
+  security_group_id      = data.aws_security_group.default_sec_grp.id
 }
