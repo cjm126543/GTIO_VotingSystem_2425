@@ -245,6 +245,9 @@ jobs:
           uses: hashicorp/setup-terraform@v3
           with:
             terraform_version: 1.6.5
+        - name: Terraform Init
+          run: terraform init
+
         - name: Remove duplicate SG rules from Terraform state (if exist)
           run: |
             echo "Checking and removing duplicate SG rules from state..."
@@ -255,10 +258,7 @@ jobs:
               echo "Attempting to remove aws_security_group_rule.${RULE} from state..."
               terraform state rm aws_security_group_rule.${RULE} || echo "Rule ${RULE} not found in state. Skipping."
             done
-            
-        - name: Terraform Init
-          run: terraform init
-  
+        
         - name: Terraform Validate
           run: terraform validate
   
@@ -270,7 +270,7 @@ jobs:
           
   deploy_target_group:
     name: Subir los Target Group a AWS
-    needs: deploy_net_and_sec
+    #needs: deploy_net_and_sec
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -324,7 +324,7 @@ jobs:
         
   deploy_alb:
     name: Subir los balanceadores de carga a AWS
-    needs: deploy_target_group
+    #needs: deploy_target_group
     runs-on: ubuntu-latest
     defaults:
       run:
