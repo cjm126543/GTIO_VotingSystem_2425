@@ -71,7 +71,9 @@ resource "aws_autoscaling_group" "ecs_asg" {
 # Capacity provider
 resource "aws_ecs_capacity_provider" "custom_cp" {
   name = var.capacity_provider_name
-
+  lifecycle {
+      prevent_destroy = true        
+    }
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_asg.arn
 
