@@ -1,0 +1,10 @@
+variable "service_name" {}
+variable "cluster_id" {}
+variable "task_family_name" {}
+//ariable "task_revision" {}
+variable "subnet_ids" {}
+variable "security_group_id" {}
+variable "target_group_arn" {}
+variable "container_name" {}
+variable "container_port" {}
+variable "alb_listener" {}
