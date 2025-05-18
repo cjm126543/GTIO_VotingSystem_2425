@@ -254,41 +254,65 @@ jobs:
           SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=default --query "SecurityGroups[0].GroupId" --output text)
           echo "sg_id=$SG_ID" >> $GITHUB_OUTPUT
   
-      - name: Importar regla SQL por descripción
+      - name: Importar regla SQL
         run: |
-          RULE_ID=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
-            --query "SecurityGroupRules[?Description=='SQL Server in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+          SG_ID=${{ steps.sg_id.outputs.sg_id }}
+          RULE_INFO=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=$SG_ID Name=description,Values="SQL Server in rule" Name=type,Values=ingress \
+            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
             --output text)
-          echo "Importando regla SQL con ID: $RULE_ID"
-          terraform import aws_security_group_rule.sql_in_rule $RULE_ID || true
+          if [ -z "$RULE_INFO" ]; then
+            echo "No se encontró regla SQL para importar"
+          else
+            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            echo "Importando regla SQL con ID: $IMPORT_ID"
+            terraform import aws_security_group_rule.sql_in_rule $IMPORT_ID || true
+          fi
   
-      - name: Importar regla Frontend por descripción
+      - name: Importar regla Frontend
         run: |
-          RULE_ID=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
-            --query "SecurityGroupRules[?Description=='Frontend in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+          SG_ID=${{ steps.sg_id.outputs.sg_id }}
+          RULE_INFO=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=$SG_ID Name=description,Values="Frontend in rule" Name=type,Values=ingress \
+            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
             --output text)
-          echo "Importando regla Frontend con ID: $RULE_ID"
-          terraform import aws_security_group_rule.front_in_rule $RULE_ID || true
+          if [ -z "$RULE_INFO" ]; then
+            echo "No se encontró regla Frontend para importar"
+          else
+            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            echo "Importando regla Frontend con ID: $IMPORT_ID"
+            terraform import aws_security_group_rule.front_in_rule $IMPORT_ID || true
+          fi
   
-      - name: Importar regla Backend por descripción
+      - name: Importar regla Backend
         run: |
-          RULE_ID=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
-            --query "SecurityGroupRules[?Description=='backend in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+          SG_ID=${{ steps.sg_id.outputs.sg_id }}
+          RULE_INFO=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=$SG_ID Name=description,Values="backend in rule" Name=type,Values=ingress \
+            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
             --output text)
-          echo "Importando regla Backend con ID: $RULE_ID"
-          terraform import aws_security_group_rule.back_in_rule $RULE_ID || true
+          if [ -z "$RULE_INFO" ]; then
+            echo "No se encontró regla Backend para importar"
+          else
+            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            echo "Importando regla Backend con ID: $IMPORT_ID"
+            terraform import aws_security_group_rule.back_in_rule $IMPORT_ID || true
+          fi
   
-      - name: Importar regla Kong por descripción
+      - name: Importar regla Kong
         run: |
-          RULE_ID=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=${{ steps.sg_id.outputs.sg_id }} \
-            --query "SecurityGroupRules[?Description=='kong in rule' && IsEgress==\`false\`].SecurityGroupRuleId" \
+          SG_ID=${{ steps.sg_id.outputs.sg_id }}
+          RULE_INFO=$(aws ec2 describe-security-group-rules \
+            --filters Name=group-id,Values=$SG_ID Name=description,Values="kong in rule" Name=type,Values=ingress \
+            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
             --output text)
-          echo "Importando regla Kong con ID: $RULE_ID"
-          terraform import aws_security_group_rule.kong_in_rule $RULE_ID || true
+          if [ -z "$RULE_INFO" ]; then
+            echo "No se encontró regla Kong para importar"
+          else
+            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            echo "Importando regla Kong con ID: $IMPORT_ID"
+            terraform import aws_security_group_rule.kong_in_rule $IMPORT_ID || true
+          fi
   
       - name: Terraform Validate
         run: terraform validate
