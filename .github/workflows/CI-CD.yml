@@ -258,7 +258,7 @@ jobs:
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla SQL para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
             echo "Importando regla SQL con ID: $IMPORT_ID"
             terraform import aws_security_group_rule.sql_in_rule $IMPORT_ID || true
           fi
@@ -271,7 +271,7 @@ jobs:
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Frontend para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
             echo "Importando regla Frontend con ID: $IMPORT_ID"
             terraform import aws_security_group_rule.front_in_rule $IMPORT_ID || true
           fi
@@ -284,7 +284,7 @@ jobs:
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Backend para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
             echo "Importando regla Backend con ID: $IMPORT_ID"
             terraform import aws_security_group_rule.back_in_rule $IMPORT_ID || true
           fi
@@ -297,7 +297,7 @@ jobs:
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Kong para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr '\t' '_')
+            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
             echo "Importando regla Kong con ID: $IMPORT_ID"
             terraform import aws_security_group_rule.kong_in_rule $IMPORT_ID || true
           fi
