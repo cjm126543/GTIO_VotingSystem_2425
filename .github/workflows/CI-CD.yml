@@ -8,12 +8,12 @@ on:
     branches:
       - productive
 jobs:
- deploy_net_and_sec:
-    name: Deploy Networking and Security
+ deploy_target_group:
+    name: Deploy Target Group with Terraform
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: TerraFormConfig/NET_AND_SEC
+        working-directory: TerraFormConfig/TARGET_GRP
 
     steps:
       - name: Checkout code
