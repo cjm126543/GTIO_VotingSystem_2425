@@ -167,13 +167,24 @@ jobs:
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
           
-      - name: Set output variables with image URIs
-        id: set-image-uris
+      - name: Write image variables to file
         run: |
-          echo "front_image=${ECR_REPO}:frontend" >> $GITHUB_OUTPUT
-          echo "back_image=${ECR_REPO}:backend" >> $GITHUB_OUTPUT
-          echo "kong_image=${ECR_REPO}:kong" >> $GITHUB_OUTPUT
-          
+          echo 'front_image = "${{ steps.push.outputs.front_image }}"' >> images.tfvars
+          echo 'back_image  = "${{ steps.push.outputs.back_image }}"' >> images.tfvars
+          echo 'kong_image  = "${{ steps.push.outputs.kong_image }}"' >> images.tfvars
+     
+      - name: Show image URLs
+        run: |
+          echo "Frontend Image: ${{ needs.upload_images.outputs.front_image }}"
+          echo "Backend Image:  ${{ needs.upload_images.outputs.back_image }}"
+          echo "Kong Image:     ${{ needs.upload_images.outputs.kong_image }}"
+
+      - name: Upload tfvars file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-vars
+          path: images.tfvars
+                
   deploy_net_and_sec:
     name: Subir las configuraciones de red y seguridad a AWS
     runs-on: ubuntu-latest
@@ -484,11 +495,14 @@ jobs:
         working-directory: TerraFormConfig/TASK_DEFS
 
     steps:
-      - name: Print Terraform variable values
-        run: |
-          echo "front_image=${{ needs.upload_images.outputs.front_image }}"
-          echo "back_image=${{ needs.upload_images.outputs.back_image }}"
-          echo "kong_image=${{ needs.upload_images.outputs.kong_image }}"
+      - name: Download image-vars artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-vars
+          path: .
+            
+      - name: Show contents of tfvars (optional)
+        run: cat images.tfvars
         
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -513,11 +527,7 @@ jobs:
         run: terraform validate
   
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-        
-      - name: Terraform Apply with image URIs
-        run: terraform apply -auto-approve \
-          -var "front_image=${{ needs.upload_images.outputs.front_image }}" \
-          -var "back_image=${{ needs.upload_images.outputs.back_image }}" \
-          -var "kong_image=${{ needs.upload_images.outputs.kong_image }}"
-
+        run: terraform plan -var-file=images.tfvars -out=tfplan
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
