@@ -508,14 +508,18 @@ jobs:
       - name: Import existing ECS resources
         shell: bash
         run: |
-          declare -A PREFIXES=(
-            [FrontCluster]="front"
-            [BackCluster]="back"
-            [KongCluster]="kong"
-          )
+          CLUSTERS=("FrontCluster" "BackCluster" "KongCluster")
+          SHORTS=("front" "back" "kong")
       
-          for CLUSTER in "${!PREFIXES[@]}"; do
-            SHORT="${PREFIXES[$CLUSTER]}"
+          for i in "${!CLUSTERS[@]}"; do
+            CLUSTER="${CLUSTERS[$i]}"
+            SHORT="${SHORTS[$i]}"
+            MODULE="module.ecs_cluster_${SHORT}"
+      
+            CLUSTER_ARN=$(aws ecs describe-clusters --clusters "$CLUSTER" --query 'clusters[0].clusterArn' --output text 2>/dev/null || true)
+            if [[ -n "$CLUSTER_ARN" && "$CLUSTER_ARN" != "None" ]]; then
+              terraform import "${MODULE}.aws_ecs_cluster.ecs_cluster" "$CLUSTER_ARN" || true
+            fi
       
             LT_NAME="ecs-launch-template-${SHORT}"
             LT_ID=$(aws ec2 describe-launch-templates --launch-template-names "$LT_NAME" --query 'LaunchTemplates[0].LaunchTemplateId' --output text 2>/dev/null || true)
@@ -524,8 +528,8 @@ jobs:
             fi
       
             ASG_NAME="ecs-asg-${SHORT}"
-            ASG_ARN=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names "$ASG_NAME" --query 'AutoScalingGroups[0].AutoScalingGroupARN' --output text 2>/dev/null || true)
-            if [[ -n "$ASG_ARN" && "$ASG_ARN" != "None" ]]; then
+            ASG_EXISTS=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names "$ASG_NAME" --query 'AutoScalingGroups[0].AutoScalingGroupName' --output text 2>/dev/null || true)
+            if [[ "$ASG_EXISTS" == "$ASG_NAME" ]]; then
               terraform import "${MODULE}.aws_autoscaling_group.ecs_asg" "$ASG_NAME" || true
             fi
       
@@ -535,6 +539,7 @@ jobs:
               terraform import "${MODULE}.aws_ecs_capacity_provider.ecs_cp" "$CP_NAME" || true
             fi
           done
+
 
   
       - name: Terraform Validate
