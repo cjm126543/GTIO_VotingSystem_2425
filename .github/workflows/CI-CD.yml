@@ -224,7 +224,7 @@ jobs:
 
   deploy_net_and_sec:
     name: Subir las configuraciones de red y seguridad a AWS
-  
+    needs: upload_images
     runs-on: ubuntu-latest
     defaults:
         run:
@@ -245,7 +245,17 @@ jobs:
           uses: hashicorp/setup-terraform@v3
           with:
             terraform_version: 1.6.5
-  
+        - name: Remove duplicate SG rules from Terraform state (if exist)
+          run: |
+            echo "Checking and removing duplicate SG rules from state..."
+            
+            RULES=("sql_in_rule" "front_in_rule" "back_in_rule" "kong_in_rule")
+            
+            for RULE in "${RULES[@]}"; do
+              echo "Attempting to remove aws_security_group_rule.${RULE} from state..."
+              terraform state rm aws_security_group_rule.${RULE} || echo "Rule ${RULE} not found in state. Skipping."
+            done
+            
         - name: Terraform Init
           run: terraform init
   
@@ -260,6 +270,7 @@ jobs:
           
   deploy_target_group:
     name: Subir los Target Group a AWS
+    needs: deploy_net_and_sec
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -281,7 +292,24 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
-
+      - name: Delete existing target groups if they exist
+        run: |
+          TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
+          for tg_name in "${TG_NAMES[@]}"; do
+            TG_ARN=$(aws elbv2 describe-target-groups --names "$tg_name" --query "TargetGroups[0].TargetGroupArn" --output text 2>/dev/null || true)
+            if [ "$TG_ARN" != "None" ] && [ -n "$TG_ARN" ]; then
+              echo "Deleting target group: $tg_name"
+              aws elbv2 delete-target-group --target-group-arn "$TG_ARN"
+            else
+              echo "Target group $tg_name does not exist"
+            fi
+          done
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESIN_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+      
       - name: Terraform Init
         run: terraform init
 
@@ -296,6 +324,7 @@ jobs:
         
   deploy_alb:
     name: Subir los balanceadores de carga a AWS
+    needs: deploy_target_group
     runs-on: ubuntu-latest
     defaults:
       run:
