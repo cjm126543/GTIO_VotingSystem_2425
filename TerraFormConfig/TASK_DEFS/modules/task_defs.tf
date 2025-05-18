@@ -5,8 +5,8 @@ resource "aws_ecs_task_definition" "task_front" {
   network_mode            = "awsvpc"
   cpu                     = "850"
   memory                  = "850"
-  task_role_arn           = "arn:aws:iam::468406663760:role/LabRole"
-  execution_role_arn      = "arn:aws:iam::468406663760:role/LabRole"
+  task_role_arn           = "arn:aws:iam::967248882765:role/LabRole"
+  execution_role_arn      = "arn:aws:iam::967248882765:role/LabRole"
 
   container_definitions = jsonencode([
     {
