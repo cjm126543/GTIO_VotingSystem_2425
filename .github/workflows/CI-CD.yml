@@ -505,6 +505,13 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Import Auto Scaling Groups
+        run: |
+          terraform import module.ecs_cluster_front.aws_autoscaling_group.ecs_asg ecs-asg-front || true
+          terraform import module.ecs_cluster_back.aws_autoscaling_group.ecs_asg ecs-asg-back || true
+          terraform import module.ecs_cluster_kong.aws_autoscaling_group.ecs_asg ecs-asg-kong || true
+
+
       - name: Terraform Validate
         run: terraform validate
   
