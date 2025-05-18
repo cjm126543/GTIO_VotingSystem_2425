@@ -499,7 +499,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: image-vars
-          path: TerraFormConfig/TASK_DEFS
+          path: ./images.tfvars
             
       - name: Show contents of tfvars (optional)
         run: cat images.tfvars
