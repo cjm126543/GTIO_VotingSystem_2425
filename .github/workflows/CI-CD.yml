@@ -516,6 +516,48 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
             terraform_version: 1.6.5
+
+      - name: Ensure IAM roles for ECS tasks exist
+        shell: bash
+        run: |
+          set -e
+      
+          create_role_if_missing () {
+            local ROLE_NAME="$1"
+            local POLICY_ARN="$2"
+      
+            if aws iam get-role --role-name "${ROLE_NAME}" >/dev/null 2>&1; then
+              echo "Role ${ROLE_NAME} already exists."
+            else
+              echo "Creating role ${ROLE_NAME}..."
+              aws iam create-role \
+                --role-name "${ROLE_NAME}" \
+                --assume-role-policy-document '{
+                  "Version": "2012-10-17",
+                  "Statement": [{
+                    "Effect": "Allow",
+                    "Principal": { "Service": "ecs-tasks.amazonaws.com" },
+                    "Action": "sts:AssumeRole"
+                  }]
+                }'
+              aws iam attach-role-policy --role-name "${ROLE_NAME}" --policy-arn "${POLICY_ARN}"
+            fi
+          }
+      
+          create_role_if_missing "ecsTaskExecutionRole" "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+          create_role_if_missing "ecsAppTaskRole" "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"  # cambia la policy según tu caso
+      
+      - name: Create roles.auto.tfvars
+        shell: bash
+        working-directory: TerraFormConfig/TASK_DEFS
+        run: |
+          EXEC_ARN=$(aws iam get-role --role-name ecsTaskExecutionRole --query 'Role.Arn' --output text)
+          TASK_ARN=$(aws iam get-role --role-name ecsAppTaskRole       --query 'Role.Arn' --output text)
+      
+          cat > roles.auto.tfvars <<EOF
+          execution_role_arn = "${EXEC_ARN}"
+          task_role_arn      = "${TASK_ARN}"
+          EOF
           
       - name: Terraform Init
         working-directory: TerraFormConfig/TASK_DEFS
