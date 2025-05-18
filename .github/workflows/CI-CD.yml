@@ -242,10 +242,14 @@ jobs:
   
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
-  
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.5
+          
       - name: Terraform Init
         run: terraform init
-  
+      
       - name: Import SQL Server in rule if exists
         run: |
           SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
