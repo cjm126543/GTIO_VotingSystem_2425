@@ -1,12 +1,11 @@
-// Crear una definición de tarea para cada cluster
-resource "aws_ecs_task_definition" "task_front" {
+resource "aws_ecs_task_definition" "task_custom" {
   family                   = var.task_family_name
   requires_compatibilities = ["EC2"]
   network_mode            = "awsvpc"
   cpu                     = "850"
   memory                  = "850"
-  task_role_arn           = "arn:aws:iam::967248882765:role/LabRole"
-  execution_role_arn      = "arn:aws:iam::967248882765:role/LabRole"
+  task_role_arn           = var.labrole_arn
+  execution_role_arn      = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -32,4 +31,10 @@ resource "aws_ecs_task_definition" "task_front" {
       }
     }
   ])
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [revision]
+  }
+
 }

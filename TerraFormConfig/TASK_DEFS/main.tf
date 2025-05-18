@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     aws = {
@@ -9,12 +10,10 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-// Declare AWS provider
 provider "aws" {
   region = "us-east-1"
 }
 
-// Locate default VPC and security group
 data "aws_vpc" "default_vpc" {
   default = true
 }
@@ -29,6 +28,10 @@ data "aws_subnets" "default_subnets" {
     name   = "vpc-id"
     values = [data.aws_vpc.default_vpc.id]
   }
+}
+
+data "aws_iam_role" "labrole" {
+  name = "LabRole"
 }
 
 variable "front_image" {
@@ -72,3 +75,4 @@ module "task_kong" {
   container_ports           = [8000, 8000]
   awslogs_group             = "/ecs"
 }
+
