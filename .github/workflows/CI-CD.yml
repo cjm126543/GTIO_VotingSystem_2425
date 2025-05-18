@@ -224,7 +224,7 @@ jobs:
 
   deploy_net_and_sec:
     name: Subir las configuraciones de red y seguridad a AWS
-    needs: upload_images
+    #needs: upload_images
     runs-on: ubuntu-latest
     defaults:
         run:
@@ -270,7 +270,7 @@ jobs:
           
   deploy_target_group:
     name: Subir los Target Group a AWS
-    #needs: deploy_net_and_sec
+    needs: deploy_net_and_sec
     runs-on: ubuntu-latest
     defaults:
       run:
