@@ -167,17 +167,17 @@ jobs:
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
           
-      - name: Write image variables to file
+      - name: Construir URIs de imágenes
         run: |
-          echo 'front_image = "${{ steps.push.outputs.front_image }}"' >> images.tfvars
-          echo 'back_image  = "${{ steps.push.outputs.back_image }}"' >> images.tfvars
-          echo 'kong_image  = "${{ steps.push.outputs.kong_image }}"' >> images.tfvars
+          echo "front_image = \"${ECR_REPO}:frontend\"" > images.tfvars
+          echo "back_image  = \"${ECR_REPO}:backend\"" >> images.tfvars
+          echo "kong_image  = \"kong:latest\"" >> images.tfvars  # ajusta si usas otra fuente
      
       - name: Show image URLs
         run: |
-          echo "Frontend Image: ${{ needs.upload_images.outputs.front_image }}"
-          echo "Backend Image:  ${{ needs.upload_images.outputs.back_image }}"
-          echo "Kong Image:     ${{ needs.upload_images.outputs.kong_image }}"
+          echo "Frontend Image: ${ECR_REPO}:frontend"
+          echo "Backend Image:  ${ECR_REPO}:backend"
+          echo "Kong Image:     "
 
       - name: Upload tfvars file as artifact
         uses: actions/upload-artifact@v4
@@ -499,7 +499,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: image-vars
-          path: .
             
       - name: Show contents of tfvars (optional)
         run: cat images.tfvars
