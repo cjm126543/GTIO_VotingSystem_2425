@@ -49,6 +49,11 @@ variable "kong_image" {
   type        = string
 }
 
+variable "labrole_arn" {
+  description = "ARN del IAM role para ECS tasks"
+  type        = string
+}
+
 module "task_front" {
   source                    = "./modules"
   task_family_name          = "front-task"
@@ -56,6 +61,7 @@ module "task_front" {
   container_image_uri       = var.front_image
   container_ports           = [4200, 4200]
   awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
 }
 
 module "task_back" {
@@ -65,6 +71,7 @@ module "task_back" {
   container_image_uri       = var.back_image
   container_ports           = [8080, 8080]
   awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
 }
 
 module "task_kong" {
@@ -74,5 +81,6 @@ module "task_kong" {
   container_image_uri       = var.kong_image
   container_ports           = [8000, 8000]
   awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
 }
 
