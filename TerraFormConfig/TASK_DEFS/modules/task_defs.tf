@@ -1,4 +1,3 @@
-// Crear una definición de tarea para cada cluster
 resource "aws_ecs_task_definition" "task_custom" {
   family                   = var.task_family_name
   requires_compatibilities = ["EC2"]

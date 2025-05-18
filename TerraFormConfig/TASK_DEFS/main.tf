@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     aws = {
@@ -9,12 +10,10 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-// Declare AWS provider
 provider "aws" {
   region = "us-east-1"
 }
 
-// Locate default VPC and security group
 data "aws_vpc" "default_vpc" {
   default = true
 }
@@ -31,41 +30,49 @@ data "aws_subnets" "default_subnets" {
   }
 }
 
-// Locate labrole arn
 data "aws_iam_role" "labrole" {
   name = "LabRole"
 }
 
-// Instance variables for needed task definitions
+variable "front_image" {
+  description = "URI completa de la imagen frontend"
+  type        = string
+}
+
+variable "back_image" {
+  description = "URI completa de la imagen backend"
+  type        = string
+}
+
+variable "kong_image" {
+  description = "URI completa de la imagen kong"
+  type        = string
+}
+
 module "task_front" {
   source                    = "./modules"
   task_family_name          = "front-task"
   container_definition_name = "front-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:front-latest"
-  container_ports     = [4200, 4200]
-  awslogs_group       = "/ecs"
-  labrole_arn = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.front_image
+  container_ports           = [4200, 4200]
+  awslogs_group             = "/ecs"
 }
 
 module "task_back" {
   source                    = "./modules"
   task_family_name          = "back-task"
   container_definition_name = "back-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:back-latest"
-  container_ports     = [8080, 8080]
-  awslogs_group       = "/ecs"
-  labrole_arn = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.back_image
+  container_ports           = [8080, 8080]
+  awslogs_group             = "/ecs"
 }
 
 module "task_kong" {
   source                    = "./modules"
   task_family_name          = "kong-task"
   container_definition_name = "kong-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:kong-latest"
-  container_ports     = [8000, 8000]
-  awslogs_group       = "/ecs"
-  labrole_arn = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.kong_image
+  container_ports           = [8000, 8000]
+  awslogs_group             = "/ecs"
 }
+
