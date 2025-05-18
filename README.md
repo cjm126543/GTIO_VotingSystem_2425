@@ -30,7 +30,7 @@ Donde se desglosan los documentos **ADR** (Architecture Decision Records), los d
 
 
 
-# Como ejecutar el proyecto
+# Cómo ejecutar el proyecto
 ## Requisitos previos
 - Tener instalado docker-engine para poder crear los contenedores docker
 - Tener instalado WSL en sistemas windows (si el host donde se va a ejecutar tiene este sistema operativo)
