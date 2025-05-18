@@ -504,6 +504,77 @@ jobs:
   
       - name: Terraform Init
         run: terraform init
+
+      - name: Import existing ECS resources (clusters, ASG, LT, capacity providers)
+        shell: bash
+        run: |
+          declare -A CLUSTERS=(
+            [FrontCluster]="front"
+            [BackCluster]="back"
+            [KongCluster]="kong"
+          )
+      
+          REGION="${AWS_REGION:-us-east-1}"  
+      
+          for CLUSTER in "${!CLUSTERS[@]}"; do
+            PREFIX="${CLUSTERS[$CLUSTER]}"          
+            MODULE="module.ecs_cluster_${PREFIX}"   
+      
+            echo "⤵  Procesando $CLUSTER ($PREFIX)…"
+            
+            CLUSTER_ARN=$(aws ecs describe-clusters \
+                            --clusters "$CLUSTER" \
+                            --query 'clusters[0].clusterArn' \
+                            --output text 2>/dev/null || true)
+      
+            if [[ -n "$CLUSTER_ARN" && "$CLUSTER_ARN" != "None" ]]; then
+              terraform import "${MODULE}.aws_ecs_cluster.this" "$CLUSTER_ARN" || true
+              echo "   ✔  Cluster ya existe, importado"
+            else
+              echo "   •  Cluster no existe, lo creará Terraform"
+            fi
+      
+            LT_NAME="ecs-launch-template-${PREFIX}"
+            LT_ID=$(aws ec2 describe-launch-templates \
+                      --launch-template-names "$LT_NAME" \
+                      --query 'LaunchTemplates[0].LaunchTemplateId' \
+                      --output text 2>/dev/null || true)
+      
+            if [[ -n "$LT_ID" && "$LT_ID" != "None" ]]; then
+              terraform import "${MODULE}.aws_launch_template.this" "$LT_ID" || true
+              echo "   ✔  Launch Template importado"
+            else
+              echo "   •  Launch Template no existe"
+            fi
+      
+            ASG_NAME="ecs-asg-${PREFIX}"
+            ASG_ARN=$(aws autoscaling describe-auto-scaling-groups \
+                        --auto-scaling-group-names "$ASG_NAME" \
+                        --query 'AutoScalingGroups[0].AutoScalingGroupARN' \
+                        --output text 2>/dev/null || true)
+      
+            if [[ -n "$ASG_ARN" && "$ASG_ARN" != "None" ]]; then
+              terraform import "${MODULE}.aws_autoscaling_group.this" "$ASG_NAME" || true
+              echo "   ✔  ASG importado"
+            else
+              echo "   •  ASG no existe"
+            fi
+      
+            CP_NAME="${PREFIX}-capacity-provider"
+            CP_EXISTS=$(aws ecs describe-capacity-providers \
+                          --capacity-providers "$CP_NAME" \
+                          --query 'capacityProviders[0].name' \
+                          --output text 2>/dev/null || true)
+      
+            if [[ "$CP_EXISTS" == "$CP_NAME" ]]; then
+              terraform import "${MODULE}.aws_ecs_capacity_provider.this" "$CP_NAME" || true
+              echo "   ✔  Capacity Provider importado"
+            else
+              echo "   •  Capacity Provider no existe"
+            fi
+      
+            echo
+          done
   
       - name: Terraform Validate
         run: terraform validate
