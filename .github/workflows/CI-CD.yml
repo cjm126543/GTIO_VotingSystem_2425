@@ -240,27 +240,17 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
   
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.5
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
   
       - name: Terraform Init
         run: terraform init
   
-      - name: Obtener ID del Security Group por nombre
-        id: sg_id
+      - name: Import SQL Server in rule if exists
         run: |
-          SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=default --query "SecurityGroups[0].GroupId" --output text)
-          echo "sg_id=$SG_ID" >> $GITHUB_OUTPUT
-  
-      - name: Importar regla SQL
-        run: |
-          SG_ID=${{ steps.sg_id.outputs.sg_id }}
-          RULE_INFO=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=$SG_ID Name=description,Values="SQL Server in rule" Name=type,Values=ingress \
-            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
-            --output text)
+          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          echo "Default security group id: $SG_ID"
+          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="SQL Server in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla SQL para importar"
           else
@@ -269,13 +259,11 @@ jobs:
             terraform import aws_security_group_rule.sql_in_rule $IMPORT_ID || true
           fi
   
-      - name: Importar regla Frontend
+      - name: Import Frontend in rule if exists
         run: |
-          SG_ID=${{ steps.sg_id.outputs.sg_id }}
-          RULE_INFO=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=$SG_ID Name=description,Values="Frontend in rule" Name=type,Values=ingress \
-            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
-            --output text)
+          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          echo "Default security group id: $SG_ID"
+          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="Frontend in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Frontend para importar"
           else
@@ -284,13 +272,11 @@ jobs:
             terraform import aws_security_group_rule.front_in_rule $IMPORT_ID || true
           fi
   
-      - name: Importar regla Backend
+      - name: Import Backend in rule if exists
         run: |
-          SG_ID=${{ steps.sg_id.outputs.sg_id }}
-          RULE_INFO=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=$SG_ID Name=description,Values="backend in rule" Name=type,Values=ingress \
-            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
-            --output text)
+          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          echo "Default security group id: $SG_ID"
+          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="backend in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Backend para importar"
           else
@@ -299,13 +285,11 @@ jobs:
             terraform import aws_security_group_rule.back_in_rule $IMPORT_ID || true
           fi
   
-      - name: Importar regla Kong
+      - name: Import Kong in rule if exists
         run: |
-          SG_ID=${{ steps.sg_id.outputs.sg_id }}
-          RULE_INFO=$(aws ec2 describe-security-group-rules \
-            --filters Name=group-id,Values=$SG_ID Name=description,Values="kong in rule" Name=type,Values=ingress \
-            --query "SecurityGroupRules[0].[GroupId,Type,IpProtocol,FromPort,ToPort,IpRanges[0].CidrIp]" \
-            --output text)
+          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          echo "Default security group id: $SG_ID"
+          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="kong in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Kong para importar"
           else
@@ -322,6 +306,7 @@ jobs:
   
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
+
 
   deploy_target_group:
     name: Subir los Target Group a AWS
