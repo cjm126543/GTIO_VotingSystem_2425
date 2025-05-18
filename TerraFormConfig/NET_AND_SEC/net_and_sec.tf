@@ -1,5 +1,8 @@
 // Create desired inbound rules
 resource "aws_security_group_rule" "sql_in_rule" {
+  create_before_destroy = true
+  prevent_destroy       = false
+  ignore_changes        = [cidr_blocks]
   type              = "ingress"
   from_port         = 1433
   to_port           = 1433
@@ -10,6 +13,9 @@ resource "aws_security_group_rule" "sql_in_rule" {
 }
 
 resource "aws_security_group_rule" "front_in_rule" {
+  create_before_destroy = true
+  prevent_destroy       = false
+  ignore_changes        = [cidr_blocks]
   type              = "ingress"
   from_port         = 4200
   to_port           = 4200
@@ -20,6 +26,9 @@ resource "aws_security_group_rule" "front_in_rule" {
 }
 
 resource "aws_security_group_rule" "back_in_rule" {
+  create_before_destroy = true
+  prevent_destroy       = false
+  ignore_changes        = [cidr_blocks]
   type              = "ingress"
   from_port         = 8080
   to_port           = 8080
@@ -30,6 +39,9 @@ resource "aws_security_group_rule" "back_in_rule" {
 }
 
 resource "aws_security_group_rule" "kong_in_rule" {
+  create_before_destroy = true
+  prevent_destroy       = false
+  ignore_changes        = [cidr_blocks]
   type              = "ingress"
   from_port         = 8000
   to_port           = 8000
