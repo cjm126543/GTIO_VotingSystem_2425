@@ -411,7 +411,26 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
+        
+      - name: Import existing Target Groups if they exist
+        run: |
+          TG_NAMES=("front-tgn" "kong-tgn" "back-tgn")
+          MODULES=("target_group_front" "target_group_kong" "target_group_back")
+      
+          for i in "${!TG_NAMES[@]}"; do
+            TG_NAME=${TG_NAMES[$i]}
+            MOD_NAME=${MODULES[$i]}
+      
+            TG_ARN=$(aws elbv2 describe-target-groups --names "$TG_NAME" \
+                      --query 'TargetGroups[0].TargetGroupArn' --output text 2>/dev/null || true)
+      
+            if [[ -n "$TG_ARN" && "$TG_ARN" != "None" ]]; then
+              echo "Importando TG $TG_NAME en $TG_ARN"
+              terraform import "module.${MOD_NAME}.aws_lb_target_group.target_group" "$TG_ARN" || true
+            else
+              echo "TG $TG_NAME no existe; Terraform lo creará"
+            fi
+          done
       - name: Terraform Validate
         run: terraform validate
 
