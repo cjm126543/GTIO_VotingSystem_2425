@@ -484,6 +484,12 @@ jobs:
         working-directory: TerraFormConfig/TASK_DEFS
 
     steps:
+      - name: Print Terraform variable values
+        run: |
+          echo "front_image=${{ needs.upload_images.outputs.front_image }}"
+          echo "back_image=${{ needs.upload_images.outputs.back_image }}"
+          echo "kong_image=${{ needs.upload_images.outputs.kong_image }}"
+        
       - name: Checkout repo
         uses: actions/checkout@v4
 
