@@ -329,6 +329,7 @@ jobs:
           terraform_version: 1.6.5
           
       - name: Delete Target Groups safely
+        shell: bash
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -337,7 +338,7 @@ jobs:
         run: |
           TG_NAMES=("front-tgn" "back-tgn" "kong-tgn")
       
-          # Obtener todos los Load Balancer ARNs
+          # Obtener los Load Balancers
           LB_ARNS=$(aws elbv2 describe-load-balancers --query "LoadBalancers[].LoadBalancerArn" --output text)
       
           for TG_NAME in "${TG_NAMES[@]}"; do
@@ -351,35 +352,43 @@ jobs:
       
             echo "Target Group ARN: $TG_ARN"
       
-            # Recorremos todos los Load Balancers para ver si algún listener usa este TG
             for LB_ARN in $LB_ARNS; do
               echo "Checking listeners in Load Balancer: $LB_ARN"
       
-              LISTENERS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[].ListenerArn" --output text)
+              LISTENER_ARNS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[].ListenerArn" --output text)
       
-              for LISTENER_ARN in $LISTENERS; do
+              for LISTENER_ARN in $LISTENER_ARNS; do
                 echo "Checking listener: $LISTENER_ARN"
       
-                DEFAULT_TG=$(aws elbv2 describe-listeners --listener-arns $LISTENER_ARN --query "Listeners[0].DefaultActions[?TargetGroupArn=='$TG_ARN']" --output text)
+                # Reglas asociadas al target group
+                RULE_ARNS=$(aws elbv2 describe-rules --listener-arn $LISTENER_ARN \
+                  --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text || true)
       
-                if [ -n "$DEFAULT_TG" ]; then
-                  echo "Deleting listener $LISTENER_ARN (uses $TG_NAME as default)"
-                  aws elbv2 delete-listener --listener-arn $LISTENER_ARN
-                fi
+                # Listener usa el TG como acción por defecto
+                IS_DEFAULT=$(aws elbv2 describe-listeners --listener-arns $LISTENER_ARN \
+                  --query "Listeners[0].DefaultActions[?TargetGroupArn=='$TG_ARN']" --output text || true)
       
-                RULES=$(aws elbv2 describe-rules --listener-arn $LISTENER_ARN --query "Rules[?Actions[?TargetGroupArn=='$TG_ARN']].RuleArn" --output text)
-                for RULE_ARN in $RULES; do
+                # Eliminar reglas si las hay
+                for RULE_ARN in $RULE_ARNS; do
                   echo "Deleting rule $RULE_ARN (uses $TG_NAME)"
                   aws elbv2 delete-rule --rule-arn $RULE_ARN
                 done
+      
+                # Eliminar listener si usaba el TG como acción por defecto
+                if [ -n "$IS_DEFAULT" ]; then
+                  echo "Deleting listener $LISTENER_ARN (uses $TG_NAME as default)"
+                  aws elbv2 delete-listener --listener-arn $LISTENER_ARN
+                fi
               done
             done
       
+            echo "Waiting a few seconds before deleting the Target Group..."
             sleep 5
       
             echo "Deleting target group $TG_NAME"
             aws elbv2 delete-target-group --target-group-arn $TG_ARN
           done
+
 
       - name: Terraform Init
         run: terraform init
