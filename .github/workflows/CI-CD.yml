@@ -505,42 +505,75 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      name: Deploy ECS
+
+on:
+  push:
+    paths:
+      - 'TerraFormConfig/ECS/**'
+      - '.github/workflows/deploy_ecs.yml'
+
+jobs:
+  deploy_ecs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TerraFormConfig/ECS
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.5
+
+      - name: Terraform Init
+        run: terraform init
+
       - name: Import existing ECS resources
         shell: bash
         run: |
           CLUSTERS=("FrontCluster" "BackCluster" "KongCluster")
           SHORTS=("front" "back" "kong")
-      
+
           for i in "${!CLUSTERS[@]}"; do
             CLUSTER="${CLUSTERS[$i]}"
             SHORT="${SHORTS[$i]}"
             MODULE="module.ecs_cluster_${SHORT}"
-      
+
             CLUSTER_ARN=$(aws ecs describe-clusters --clusters "$CLUSTER" --query 'clusters[0].clusterArn' --output text 2>/dev/null || true)
             if [[ -n "$CLUSTER_ARN" && "$CLUSTER_ARN" != "None" ]]; then
               terraform import "${MODULE}.aws_ecs_cluster.ecs_cluster" "$CLUSTER_ARN" || true
             fi
-      
+
             LT_NAME="ecs-launch-template-${SHORT}"
             LT_ID=$(aws ec2 describe-launch-templates --launch-template-names "$LT_NAME" --query 'LaunchTemplates[0].LaunchTemplateId' --output text 2>/dev/null || true)
             if [[ -n "$LT_ID" && "$LT_ID" != "None" ]]; then
               terraform import "${MODULE}.aws_launch_template.ecs_instance_template" "$LT_ID" || true
             fi
-      
+
             ASG_NAME="ecs-asg-${SHORT}"
             ASG_EXISTS=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names "$ASG_NAME" --query 'AutoScalingGroups[0].AutoScalingGroupName' --output text 2>/dev/null || true)
             if [[ "$ASG_EXISTS" == "$ASG_NAME" ]]; then
               terraform import "${MODULE}.aws_autoscaling_group.ecs_asg" "$ASG_NAME" || true
             fi
-      
+
             CP_NAME="${SHORT}-capacity-provider"
             CP_EXISTS=$(aws ecs describe-capacity-providers --capacity-providers "$CP_NAME" --query 'capacityProviders[0].name' --output text 2>/dev/null || true)
             if [[ "$CP_EXISTS" == "$CP_NAME" ]]; then
               terraform import "${MODULE}.aws_ecs_capacity_provider.custom_cp" "$CP_NAME" || true
             fi
           done
-
-
   
       - name: Terraform Validate
         run: terraform validate
