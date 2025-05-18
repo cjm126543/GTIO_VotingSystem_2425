@@ -1,63 +1,48 @@
-resource "aws_security_group_rule" "sql_in_rule" {
-  type              = "ingress"
-  from_port         = 1433
-  to_port           = 1433
-  protocol          = "tcp"
-  cidr_blocks       = ["10.0.0.0/16"]
-  security_group_id = data.aws_security_group.default_sec_grp.id
-  description       = "SQL Server in rule"
+resource "aws_security_group" "default_sec_grp" {
+  name        = "default-sec-group"
+  description = "Security group with ingress rules for SQL, frontend, backend, and Kong"
+  vpc_id      = data.aws_vpc.default.id 
 
-  lifecycle {
-    create_before_destroy = true
-    prevent_destroy       = false
-    ignore_changes        = [cidr_blocks]
+  ingress {
+    description = "SQL Server in rule"
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
   }
-}
 
-resource "aws_security_group_rule" "front_in_rule" {
-  type              = "ingress"
-  from_port         = 4200
-  to_port           = 4200
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = data.aws_security_group.default_sec_grp.id
-  description       = "Frontend in rule"
-
-  lifecycle {
-    create_before_destroy = true
-    prevent_destroy       = false
-    ignore_changes        = [cidr_blocks]
+  ingress {
+    description = "Frontend in rule"
+    from_port   = 4200
+    to_port     = 4200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-}
 
-resource "aws_security_group_rule" "back_in_rule" {
-  type              = "ingress"
-  from_port         = 8080
-  to_port           = 8080
-  protocol          = "tcp"
-  cidr_blocks       = ["10.0.0.0/16"]
-  security_group_id = data.aws_security_group.default_sec_grp.id
-  description       = "backend in rule"
-
-  lifecycle {
-    create_before_destroy = true
-    prevent_destroy       = false
-    ignore_changes        = [cidr_blocks]
+  ingress {
+    description = "Backend in rule"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
   }
-}
 
-resource "aws_security_group_rule" "kong_in_rule" {
-  type              = "ingress"
-  from_port         = 8000
-  to_port           = 8000
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = data.aws_security_group.default_sec_grp.id
-  description       = "kong in rule"
+  ingress {
+    description = "Kong in rule"
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  lifecycle {
-    create_before_destroy = true
-    prevent_destroy       = false
-    ignore_changes        = [cidr_blocks]
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "default-sec-group"
   }
 }
