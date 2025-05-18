@@ -252,54 +252,126 @@ jobs:
       
       - name: Import SQL Server in rule if exists
         run: |
-          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          SG_ID=$(aws ec2 describe-security-groups \
+              --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) \
+              --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
           echo "Default security group id: $SG_ID"
-          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="SQL Server in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
+      
+          RULE_INFO=$(
+            aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID \
+              --query 'SecurityGroupRules' --output json |
+            jq -r '
+              map(select(.Description=="SQL Server in rule"))[0] |
+              [
+                .GroupId,
+                (if .IsEgress then "egress" else "ingress" end),
+                .IpProtocol,
+                (.FromPort // 0),
+                (.ToPort   // 0),
+                (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")
+              ] | @tsv
+            '
+          )
+      
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla SQL para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
+            IMPORT_ID=$(echo "$RULE_INFO" | tr '\t' '_')
             echo "Importando regla SQL con ID: $IMPORT_ID"
-            terraform import aws_security_group_rule.sql_in_rule $IMPORT_ID || true
+            terraform import aws_security_group_rule.sql_in_rule "$IMPORT_ID" || true
           fi
-  
+      
       - name: Import Frontend in rule if exists
         run: |
-          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          SG_ID=$(aws ec2 describe-security-groups \
+              --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) \
+              --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
           echo "Default security group id: $SG_ID"
-          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="Frontend in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
+      
+          RULE_INFO=$(
+            aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID \
+              --query 'SecurityGroupRules' --output json |
+            jq -r '
+              map(select(.Description=="Frontend in rule"))[0] |
+              [
+                .GroupId,
+                (if .IsEgress then "egress" else "ingress" end),
+                .IpProtocol,
+                (.FromPort // 0),
+                (.ToPort   // 0),
+                (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")
+              ] | @tsv
+            '
+          )
+      
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Frontend para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
+            IMPORT_ID=$(echo "$RULE_INFO" | tr '\t' '_')
             echo "Importando regla Frontend con ID: $IMPORT_ID"
-            terraform import aws_security_group_rule.front_in_rule $IMPORT_ID || true
+            terraform import aws_security_group_rule.front_in_rule "$IMPORT_ID" || true
           fi
-  
+      
       - name: Import Backend in rule if exists
         run: |
-          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          SG_ID=$(aws ec2 describe-security-groups \
+              --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) \
+              --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
           echo "Default security group id: $SG_ID"
-          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="backend in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
+      
+          RULE_INFO=$(
+            aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID \
+              --query 'SecurityGroupRules' --output json |
+            jq -r '
+              map(select(.Description=="backend in rule"))[0] |
+              [
+                .GroupId,
+                (if .IsEgress then "egress" else "ingress" end),
+                .IpProtocol,
+                (.FromPort // 0),
+                (.ToPort   // 0),
+                (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")
+              ] | @tsv
+            '
+          )
+      
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Backend para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
+            IMPORT_ID=$(echo "$RULE_INFO" | tr '\t' '_')
             echo "Importando regla Backend con ID: $IMPORT_ID"
-            terraform import aws_security_group_rule.back_in_rule $IMPORT_ID || true
+            terraform import aws_security_group_rule.back_in_rule "$IMPORT_ID" || true
           fi
-  
+      
       - name: Import Kong in rule if exists
         run: |
-          SG_ID=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
+          SG_ID=$(aws ec2 describe-security-groups \
+              --filters Name=vpc-id,Values=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query "Vpcs[0].VpcId" --output text) \
+              --query "SecurityGroups[?GroupName=='default'].GroupId" --output text)
           echo "Default security group id: $SG_ID"
-          RULE_INFO=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID --query 'SecurityGroupRules' --output json | jq -r '.[] | select(.Description=="kong in rule") | [.GroupId, .Type, .IpProtocol, (.FromPort // 0), (.ToPort // 0), (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")] | @tsv' | head -1)
+      
+          RULE_INFO=$(
+            aws ec2 describe-security-group-rules --filters Name=group-id,Values=$SG_ID \
+              --query 'SecurityGroupRules' --output json |
+            jq -r '
+              map(select(.Description=="kong in rule"))[0] |
+              [
+                .GroupId,
+                (if .IsEgress then "egress" else "ingress" end),
+                .IpProtocol,
+                (.FromPort // 0),
+                (.ToPort   // 0),
+                (.CidrIpv4 // .CidrIpv6 // "0.0.0.0/0")
+              ] | @tsv
+            '
+          )
+      
           if [ -z "$RULE_INFO" ]; then
             echo "No se encontró regla Kong para importar"
           else
-            IMPORT_ID=$(echo $RULE_INFO | tr ' ' '_')
+            IMPORT_ID=$(echo "$RULE_INFO" | tr '\t' '_')
             echo "Importando regla Kong con ID: $IMPORT_ID"
-            terraform import aws_security_group_rule.kong_in_rule $IMPORT_ID || true
+            terraform import aws_security_group_rule.kong_in_rule "$IMPORT_ID" || true
           fi
   
       - name: Terraform Validate
