@@ -654,7 +654,7 @@ jobs:
   
               if [[ -n "$SVC_ARN" && "$SVC_ARN" != "None" ]]; then
                 echo "Importando $SVC_NAME ($SVC_ARN)"
-                terraform import "module.${SVC_NAME//-/_}.aws_ecs_service.this" "$SVC_ARN" || true
+                terraform import "module.${SVC_NAME//-/_}.aws_ecs_service.ecs_service" "$SVC_ARN" || true
               else
                 echo "El servicio $SVC_NAME no existe; Terraform lo creará."
               fi
