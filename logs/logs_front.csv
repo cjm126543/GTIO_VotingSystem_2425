@@ -1,0 +1,32 @@
+timestamp,message
+1747668605786,Warning: This is a simple server for use in testing or debugging Angular applications
+1747668605786,locally. It hasn't been reviewed for security issues.
+1747668605786,Binding this server to an open connection can result in compromising your application or
+1747668605786,"computer. Using a different host than the one passed to the ""--host"" flag might result in"
+1747668605786,"websocket connection issues. You might need to use ""--disable-host-check"" if that's the"
+1747668605786,case.
+1747668605786,    
+1747668605972,Component HMR has been enabled.
+1747668605972,"If you encounter application reload issues, you can manually reload the page to bypass HMR and/or disable this feature with the `--no-hmr` command line option."
+1747668605972,Please consider reporting any issues you encounter here: https://github.com/angular/angular-cli/issues
+1747668606231,❯ Building...
+1747668613238,✔ Building...
+1747668613240,Initial chunk files | Names         |  Raw size
+1747668613240,polyfills.js        | polyfills     |  90.20 kB | 
+1747668613240,main.js             | main          |  42.44 kB | 
+1747668613240,styles.css          | styles        |  95 bytes | 
+1747668613240,                    | Initial total | 132.73 kB
+1747668613240,Application bundle generation complete. [7.007 seconds]
+1747668613249,▲ [WARNING] TS-998113: DemoComponent is not used within the template of AppComponent [plugin angular-compiler]
+1747668613249,    src/app/app.component.ts:9:26:
+1747668613249,"      9 │   imports: [RouterOutlet, DemoComponent, NavBarComponent, LoginComp..."
+1747668613249,        ╵                           ~~~~~~~~~~~~~
+1747668613249,▲ [WARNING] TS-998113: LoginComponent is not used within the template of AppComponent [plugin angular-compiler]
+1747668613249,    src/app/app.component.ts:9:58:
+1747668613249,"      9 │ ...ts: [RouterOutlet, DemoComponent, NavBarComponent, LoginComponent],"
+1747668613249,        ╵                                                       ~~~~~~~~~~~~~~
+1747668613257,Watch mode enabled. Watching for file changes...
+1747668613258,NOTE: Raw file sizes do not reflect development server per-request transformations.
+1747668613638,  ➜  Local:   http://localhost:4200/
+1747668613639,  ➜  Network: http://169.254.172.2:4200/
+1747668613639,  ➜  Network: http://172.31.50.5:4200/
