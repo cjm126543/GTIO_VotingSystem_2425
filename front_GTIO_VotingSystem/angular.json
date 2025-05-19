@@ -69,7 +69,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "allowedHosts": ["localhost","front-load-balancer-1251955972.us-east-1.elb.amazonaws.com"]
+            "allowedHosts": ["localhost","front-load-balancer-1251955972.us-east-1.elb.amazonaws.com", "front-alb-447982913.us-east-1.elb.amazonaws.com"]
           }
         },
         "extract-i18n": {
