@@ -88,7 +88,7 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose version
   
-      - name: Build only front and back services
+      - name: Build services
         working-directory: DockerConfig
         run: |
           docker compose -f compose.yaml build front back kong  
@@ -128,6 +128,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
             name: ecr-url
+            
       - name: Leer URI
         run: |
             ECR_REPO=$(cat ecr_url.txt)
@@ -204,6 +205,7 @@ jobs:
       run:
         working-directory: TerraFormConfig/NET_AND_SEC
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v4
   
@@ -399,6 +401,7 @@ jobs:
         working-directory: TerraFormConfig/TARGET_GRP
 
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -455,6 +458,7 @@ jobs:
         working-directory: TerraFormConfig/ALB
 
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -486,7 +490,6 @@ jobs:
   deploy_ecs:
     name: Desplegar ECS
     runs-on: ubuntu-latest
-  
     defaults:
       run:
         working-directory: TerraFormConfig/ECS   
@@ -564,7 +567,7 @@ jobs:
         id: labrole
         shell: bash
         run: |
-          ROLE_NAME="LabRole"      # <-- cámbialo si tu role tiene otro nombre
+          ROLE_NAME="LabRole"     
       
           LABROLE_ARN=$(aws iam get-role \
               --role-name "${ROLE_NAME}" \
