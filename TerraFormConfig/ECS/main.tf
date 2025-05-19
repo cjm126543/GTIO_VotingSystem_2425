@@ -36,6 +36,7 @@ module "ecs_cluster_front" {
   source                 = "./modules"
   cluster_name           = "FrontCluster"
   ecs_prefix             = "ecs-launch-template-front"
+  machine_instance_type  = "t2.small"
   aws_ami_id             = "ami-05712a2b73d4ebafb"
   asg_name               = "ecs-asg-front"
   aws_subnets_ids        = data.aws_subnets.default_subnets.ids
@@ -48,6 +49,7 @@ module "ecs_cluster_back" {
   source                 = "./modules"
   cluster_name           = "BackCluster"
   ecs_prefix             = "ecs-launch-template-back"
+  machine_instance_type  = "t2.small"
   aws_ami_id             = "ami-05712a2b73d4ebafb"
   asg_name               = "ecs-asg-back"
   aws_subnets_ids        = data.aws_subnets.default_subnets.ids
@@ -60,6 +62,7 @@ module "ecs_cluster_kong" {
   source                 = "./modules"
   cluster_name           = "KongCluster"
   ecs_prefix             = "ecs-launch-template-kong"
+  machine_instance_type  = "t2.small"
   aws_ami_id             = "ami-05712a2b73d4ebafb"
   asg_name               = "ecs-asg-kong"
   aws_subnets_ids        = data.aws_subnets.default_subnets.ids

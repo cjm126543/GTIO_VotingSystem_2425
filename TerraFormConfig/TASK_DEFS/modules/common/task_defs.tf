@@ -1,11 +1,11 @@
 resource "aws_ecs_task_definition" "task_custom" {
   family                   = var.task_family_name
   requires_compatibilities = ["EC2"]
-  network_mode            = "awsvpc"
-  cpu                     = "850"
-  memory                  = "850"
-  task_role_arn           = var.labrole_arn
-  execution_role_arn      = var.labrole_arn
+  network_mode             = "awsvpc"
+  cpu                      = "850"
+  memory                   = "850"
+  task_role_arn            = var.labrole_arn
+  execution_role_arn       = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -34,7 +34,6 @@ resource "aws_ecs_task_definition" "task_custom" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes = [revision]
+    ignore_changes        = [revision]
   }
-
 }

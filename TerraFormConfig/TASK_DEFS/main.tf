@@ -55,17 +55,18 @@ variable "labrole_arn" {
 }
 
 module "task_front" {
-  source                    = "./modules"
+  source                    = "./modules/common"
   task_family_name          = "front-task"
   container_definition_name = "front-container"
   container_image_uri       = var.front_image
   container_ports           = [4200, 4200]
   awslogs_group             = "/ecs"
   labrole_arn = var.labrole_arn
+
 }
 
 module "task_back" {
-  source                    = "./modules"
+  source                    = "./modules/common"
   task_family_name          = "back-task"
   container_definition_name = "back-container"
   container_image_uri       = var.back_image
@@ -75,7 +76,7 @@ module "task_back" {
 }
 
 module "task_kong" {
-  source                    = "./modules"
+  source                    = "./modules/kong"
   task_family_name          = "kong-task"
   container_definition_name = "kong-container"
   container_image_uri       = var.kong_image
@@ -83,4 +84,3 @@ module "task_kong" {
   awslogs_group             = "/ecs"
   labrole_arn = var.labrole_arn
 }
-
