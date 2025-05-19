@@ -91,7 +91,7 @@ jobs:
       - name: Build only front and back services
         working-directory: DockerConfig
         run: |
-          docker compose -f compose.yaml build front back kong  # Construye las imágenes front y back
+          docker compose -f compose.yaml build front back kong  
   
       - name: Create images directory
         run: mkdir -p images
@@ -101,6 +101,9 @@ jobs:
       
       - name: Save frontend image
         run: docker save dockerconfig-front -o images/frontend.tar
+      
+      - name: Save kong image
+        run: docker save dockerconfig-kong -o images/kong.tar
       
       - name: Upload both images as a single artifact
         uses: actions/upload-artifact@v4
@@ -145,6 +148,7 @@ jobs:
         run: |
           aws ecr batch-delete-image --repository-name carlos/repo --image-ids imageTag=frontend || true
           aws ecr batch-delete-image --repository-name carlos/repo --image-ids imageTag=backend || true
+          aws ecr batch-delete-image --repository-name carlos/repo --image-ids imageTag=kong || true
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -156,6 +160,9 @@ jobs:
       
       - name: Load frontend image
         run: docker load < ./images/frontend.tar
+        
+      - name: Load kong image
+        run: docker load < ./images/kong.tar
 
       - name: Etiquetar y subir imagen backend
         run: |
@@ -166,18 +173,23 @@ jobs:
         run: |
           docker tag dockerconfig-front:latest $ECR_REPO:frontend
           docker push $ECR_REPO:frontend
+
+      - name: Etiquetar y subir imagen kong
+        run: |
+          docker tag dockerconfig-kong:latest $ECR_REPO:kong
+          docker push $ECR_REPO:kong
           
       - name: Construir URIs de imágenes
         run: |
           echo "front_image = \"${ECR_REPO}:frontend\"" > images.tfvars
           echo "back_image  = \"${ECR_REPO}:backend\"" >> images.tfvars
-          echo "kong_image  = \"kong:latest\"" >> images.tfvars  # ajusta si usas otra fuente
+          echo "kong_image  = \"${ECR_REPO}:kong\"" >> images.tfvars  
      
       - name: Show image URLs
         run: |
           echo "Frontend Image: ${ECR_REPO}:frontend"
           echo "Backend Image:  ${ECR_REPO}:backend"
-          echo "Kong Image:     "
+          echo "Kong Image:     ${ECR_REPO}:kong"
 
       - name: Upload tfvars file as artifact
         uses: actions/upload-artifact@v4
@@ -516,6 +528,35 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
             terraform_version: 1.6.5
+            
+      - name: Get LabRole ARN
+        id: labrole
+        shell: bash
+        run: |
+          ROLE_NAME="LabRole"      # <-- cámbialo si tu role tiene otro nombre
+      
+          LABROLE_ARN=$(aws iam get-role \
+              --role-name "${ROLE_NAME}" \
+              --query 'Role.Arn' \
+              --output text 2>/dev/null || true)
+      
+          if [[ -z "${LABROLE_ARN}" || "${LABROLE_ARN}" == "None" ]]; then
+            echo "ERROR: El role '${ROLE_NAME}' no existe o no es accesible."
+            exit 1
+          fi
+      
+          echo "labrole_arn=${LABROLE_ARN}" >> "$GITHUB_OUTPUT"
+      
+      - name: Generate labrole.auto.tfvars
+        shell: bash
+        working-directory: TerraFormConfig/TASK_DEFS
+        run: |
+          cat > labrole.auto.tfvars <<EOF
+          labrole_arn = "${{ steps.labrole.outputs.labrole_arn }}"
+          EOF
+      
+          echo "labrole.auto.tfvars creado con:"
+          cat labrole.auto.tfvars
           
       - name: Terraform Init
         working-directory: TerraFormConfig/TASK_DEFS

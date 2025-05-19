@@ -49,35 +49,38 @@ variable "kong_image" {
   type        = string
 }
 
+variable "labrole_arn" {
+  description = "ARN del IAM role para ECS tasks"
+  type        = string
+}
+
 module "task_front" {
   source                    = "./modules/common"
   task_family_name          = "front-task"
   container_definition_name = "front-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:front-latest"
-  container_ports     = [4200, 4200]
-  awslogs_group       = "/ecs"
-  labrole_arn         = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.front_image
+  container_ports           = [4200, 4200]
+  awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
+
 }
 
 module "task_back" {
   source                    = "./modules/common"
   task_family_name          = "back-task"
   container_definition_name = "back-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:back-latest"
-  container_ports     = [8080, 8080]
-  awslogs_group       = "/ecs"
-  labrole_arn         = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.back_image
+  container_ports           = [8080, 8080]
+  awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
 }
 
 module "task_kong" {
   source                    = "./modules/kong"
   task_family_name          = "kong-task"
   container_definition_name = "kong-container"
-  // this needs to be retrieved from CD
-  container_image_uri = "468406663760.dkr.ecr.us-east-1.amazonaws.com/carlos/repo:kong-latest"
-  container_ports     = [8000, 8000]
-  awslogs_group       = "/ecs"
-  labrole_arn         = data.aws_iam_role.labrole.arn
+  container_image_uri       = var.kong_image
+  container_ports           = [8000, 8000]
+  awslogs_group             = "/ecs"
+  labrole_arn = var.labrole_arn
 }
