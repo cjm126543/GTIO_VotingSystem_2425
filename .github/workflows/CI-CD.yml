@@ -612,7 +612,7 @@ jobs:
   
       defaults:
         run:
-          working-directory: TerraFormConfig/ECS_SERVICES
+          working-directory: TerraFormConfig/ECS_SERVICE
   
       steps:
         - name: Checkout repo
