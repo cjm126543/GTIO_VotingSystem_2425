@@ -500,7 +500,7 @@ jobs:
         
   deploy_task_def:
     name: Desplegar definiciones de las tareas
-    needs: [upload_images, deploy_ecs]
+    needs: [upload_images, deploy_ecs,deploy_alb]
     runs-on: ubuntu-latest
   
     steps:
@@ -573,3 +573,64 @@ jobs:
       - name: Terraform Apply
         working-directory: TerraFormConfig/TASK_DEFS
         run: terraform apply -auto-approve tfplan
+
+  deploy_ecs_services:
+      name: Desplegar servicios ECS
+      needs: deploy_task_def        
+      runs-on: ubuntu-latest
+  
+      defaults:
+        run:
+          working-directory: TerraFormConfig/ECS_SERVICES
+  
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+  
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+            aws-region:            ${{ secrets.AWS_REGION }}
+  
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v3
+          with:
+            terraform_version: 1.6.5          
+  
+        - name: Terraform Init
+          run: terraform init
+  
+        - name: Import existing ECS services if they exist
+          run: |
+            SERVICES=("front-service" "kong-service" "back-service")
+            CLUSTERS=("FrontCluster" "KongCluster" "BackCluster")
+  
+            for i in "${!SERVICES[@]}"; do
+              SVC_NAME=${SERVICES[$i]}
+              CLS_NAME=${CLUSTERS[$i]}
+  
+              SVC_ARN=$(aws ecs describe-services \
+                          --cluster "$CLS_NAME" \
+                          --services "$SVC_NAME" \
+                          --query 'services[0].serviceArn' \
+                          --output text 2>/dev/null || true)
+  
+              if [[ -n "$SVC_ARN" && "$SVC_ARN" != "None" ]]; then
+                echo "Importando $SVC_NAME ($SVC_ARN)"
+                terraform import "module.${SVC_NAME//-/_}.aws_ecs_service.this" "$SVC_ARN" || true
+              else
+                echo "El servicio $SVC_NAME no existe; Terraform lo creará."
+              fi
+            done
+  
+        - name: Terraform Validate
+          run: terraform validate
+  
+        - name: Terraform Plan
+          run: terraform plan -out=tfplan
+  
+        - name: Terraform Apply
+          run: terraform apply -auto-approve tfplan
