@@ -21,7 +21,6 @@ timestamp,message
 1747668573378,    pg_ctl -D /var/lib/postgresql/data -l logfile start
 1747668573379,"initdb: warning: enabling ""trust"" authentication for local connections"
 1747668573379,"You can change this by editing pg_hba.conf or using the option -A, or"
-1747668573379,'"--auth-local and --auth-host, the next time you run initdb."
 1747668573453,"waiting for server to start....2025-05-19 15:29:33.452 UTC [39] LOG:  starting PostgreSQL 13.21 on x86_64-pc-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit"
 1747668573459,"2025-05-19 15:29:33.458 UTC [39] LOG:  listening on Unix socket ""/var/run/postgresql/.s.PGSQL.5432"""
 1747668573465,2025-05-19 15:29:33.464 UTC [40] LOG:  database system was shut down at 2025-05-19 15:29:33 UTC
