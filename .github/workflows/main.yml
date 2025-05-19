@@ -1,7 +1,11 @@
+name: Pipeline de Test
 on:
   push:
     branches:
       - test 
+  pull_request:
+      branches:
+        - test
 
 jobs:
   test:
