@@ -1,0 +1,201 @@
+timestamp,message
+1747669231227,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747669231227,      FROM (
+1747669231227,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747669231227,      ) AS [b]
+1747669231235,info: 05/19/2025 15:40:31.235 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747669231235,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669231236,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669231236,      FROM [dtVotos] AS [d]
+1747669231236,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669231236,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669231236,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669231236,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747669231236,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669231236,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669231236,      FROM [dtVotos] AS [d]
+1747669231236,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669231236,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669231236,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669531006,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747669531006,"      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669531006,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747669531006,      FROM (
+1747669531006,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747669531006,      ) AS [b]
+1747669531006,info: 05/19/2025 15:45:31.006 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747669531006,"      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669531006,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747669531006,      FROM (
+1747669531006,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747669531006,      ) AS [b]
+1747669531010,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747669531010,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669531010,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669531010,      FROM [dtVotos] AS [d]
+1747669531010,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669531010,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669531010,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669531010,info: 05/19/2025 15:45:31.010 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747669531010,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669531010,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669531010,      FROM [dtVotos] AS [d]
+1747669531010,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669531010,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669531010,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669951142,info: 05/19/2025 15:52:31.142 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747669951142,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669951142,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669951142,      FROM [dtVotos] AS [d]
+1747669951142,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669951142,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669951142,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669951142,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747669951142,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669951142,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747669951142,      FROM [dtVotos] AS [d]
+1747669951142,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747669951142,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747669951142,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747669951152,info: 05/19/2025 15:52:31.152 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747669951152,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669951153,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747669951153,      FROM (
+1747669951153,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747669951153,      ) AS [b]
+1747669951153,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747669951153,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747669951153,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747669951153,      FROM (
+1747669951153,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747669951153,      ) AS [b]
+1747670250924,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670250924,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670250924,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670250925,      FROM (
+1747670250925,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670250925,      ) AS [b]
+1747670250925,info: 05/19/2025 15:57:30.924 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670250925,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670250925,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670250925,      FROM (
+1747670250925,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670250925,      ) AS [b]
+1747670250929,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670250929,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670250929,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670250929,      FROM [dtVotos] AS [d]
+1747670250929,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670250929,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670250929,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747670250929,info: 05/19/2025 15:57:30.929 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670250929,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670250929,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670250929,      FROM [dtVotos] AS [d]
+1747670250929,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670250929,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670250929,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747670550925,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670550925,"      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670550925,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670550925,      FROM (
+1747670550925,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670550925,      ) AS [b]
+1747670550925,info: 05/19/2025 16:02:30.925 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670550925,"      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670550925,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670550925,      FROM (
+1747670550925,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670550925,      ) AS [b]
+1747670551133,info: 05/19/2025 16:02:31.132 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670551133,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670551133,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670551133,      FROM [dtVotos] AS [d]
+1747670551133,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670551133,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670551133,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747670551133,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670551133,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670551133,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670551133,      FROM [dtVotos] AS [d]
+1747670551133,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670551133,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670551133,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747670843955,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670843955,"      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670843955,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670843955,      FROM (
+1747670843955,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670843955,      ) AS [b]
+1747670843957,info: 05/19/2025 16:07:23.956 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670843957,"      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670843957,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747670843957,      FROM (
+1747670843957,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747670843957,      ) AS [b]
+1747670843964,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747670843964,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670843964,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670843964,      FROM [dtVotos] AS [d]
+1747670843964,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670843964,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670843964,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747670843964,info: 05/19/2025 16:07:23.964 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747670843964,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747670843964,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747670843964,      FROM [dtVotos] AS [d]
+1747670843964,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747670843964,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747670843964,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747671085878,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747671085878,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671085878,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747671085878,      FROM [dtVotos] AS [d]
+1747671085878,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747671085878,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747671085878,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747671085878,info: 05/19/2025 16:11:25.878 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747671085878,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671085878,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747671085878,      FROM [dtVotos] AS [d]
+1747671085878,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747671085878,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747671085878,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747671085880,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747671085880,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671085880,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747671085880,      FROM (
+1747671085880,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747671085880,      ) AS [b]
+1747671085880,info: 05/19/2025 16:11:25.880 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747671085880,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671085880,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747671085880,      FROM (
+1747671085880,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747671085880,      ) AS [b]
+1747671327904,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747671327904,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671327904,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747671327904,      FROM (
+1747671327904,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747671327904,      ) AS [b]
+1747671327905,info: 05/19/2025 16:15:27.904 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747671327905,"      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671327905,"      SELECT [b].[IDArtista], [b].[Nombre], [b].[Apellidos], [b].[Sexo], [b].[LinkFoto], [b].[Biografia]"
+1747671327905,      FROM (
+1747671327905,          SELECT * FROM dtArtistas WHERE Eliminado = 0
+1747671327905,      ) AS [b]
+1747671327906,info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+1747671327906,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671327906,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747671327906,      FROM [dtVotos] AS [d]
+1747671327906,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747671327906,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747671327906,      WHERE [d].[Eliminado] = CAST(0 AS bit)
+1747671327906,info: 05/19/2025 16:15:27.906 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+1747671327906,"      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']"
+1747671327906,"      SELECT [d].[IDVoto], [d0].[Nombre], [d0].[Apellidos], [d1].[Nombre], [d1].[Apellidos], [d].[FechaVoto]"
+1747671327906,      FROM [dtVotos] AS [d]
+1747671327906,      INNER JOIN [dtUsuarios] AS [d0] ON [d].[IDUsuario] = [d0].[IDUsuario]
+1747671327906,      INNER JOIN [dtArtistas] AS [d1] ON [d].[IDArtista] = [d1].[IDArtista]
+1747671327906,      WHERE [d].[Eliminado] = CAST(0 AS bit)
