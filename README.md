@@ -16,7 +16,7 @@ Dentro de **develop**, se encuentra el código fuente de nuestra aplicación, se
 
 La rama de **test**, tal y como se ha indicado, contiene una copia de todo el contenido, además de ser el lugar desde donde se han realizado pruebas de test unitarios, GitHub Actions, etc.
 
-Por último, la rama **productive** contendrá lo necesario para desplegar la aplicación en los entornos de producción, levantando nuestra infraestructura en [AWS](https://github.com/GTIOVotingSystem2425/GTIO_VotingSystem_2425/wiki/ADRs#adr019_20250505_despliegue_servicios_aws_back) y llevando a cabo este proceso a través de [Terraform](enlace adr terraform) 
+Por último, la rama **productive** contendrá lo necesario para desplegar la aplicación en los entornos de producción, levantando nuestra infraestructura en [AWS](https://github.com/GTIOVotingSystem2425/GTIO_VotingSystem_2425/wiki/ADRs#adr019_20250505_despliegue_servicios_aws_back) y llevando a cabo este proceso a través de [Terraform](https://github.com/GTIOVotingSystem2425/GTIO_VotingSystem_2425/wiki/ADRs#adr022_20250520_terraform) 
 
 # Documentación
 Toda la documentación relevante para entender las decisiones tomadas en este proyecto, así como diversas cuestiones de arquitectura o despliegue del proyecto en local, se encuentran debidamente referenciadas en nuestra [wiki](https://github.com/GTIOVotingSystem2425/GTIO_VotingSystem_2425/wiki).
